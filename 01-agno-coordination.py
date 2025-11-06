@@ -4,6 +4,7 @@ import re
 import json
 import time
 import threading
+from datetime import datetime
 from dotenv import load_dotenv
 from difflib import get_close_matches
 
@@ -11,6 +12,7 @@ from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 from agno.team.team import Team
 from agno.tools.firecrawl import FirecrawlTools
+from agno.tools.local_file_system import LocalFileSystemTools
 from pydantic import BaseModel, Field
 
 # Import custom Brave Search tool
@@ -449,6 +451,10 @@ move_decision_team = Team(
     name="City Move Decision Team",
     model=OpenAIChat("gpt-5-mini"),
     members=[cost_analyst, sentiment_analyst, migration_researcher],
+    tools=[LocalFileSystemTools(
+        target_directory="./reports",
+        default_extension="md"
+    )],
     instructions=[
         "You are a coordinator helping users decide whether to move to a new city.",
         "",
@@ -477,6 +483,27 @@ move_decision_team = Team(
         "After receiving all three analyses, synthesize the information into a clear recommendation.",
         "Provide a balanced assessment considering financial, lifestyle, and experiential factors.",
         "Be honest about uncertainties and suggest next steps for further research.",
+        "",
+        "Step 4 - Save Report:",
+        "After synthesizing the final recommendation, save a comprehensive markdown report using the write_file tool.",
+        "IMPORTANT: Only provide the FILENAME (no path/directory), as files automatically save to the reports/ folder.",
+        "The filename should be: '{current_city}_to_{desired_city}_{timestamp}_analysis.md'",
+        "  - Normalize city names to lowercase with underscores, remove special characters",
+        "  - Use timestamp format: YYYYMMDD_HHMMSS (e.g., 20250106_143022)",
+        "  - Example filename: 'dallas_to_austin_20250106_143022_analysis.md' (NO 'reports/' prefix)",
+        "The markdown report should include:",
+        "  - # Title: Should You Move from {Current City} to {Desired City}?",
+        "  - ## Report Generated: [Current Date and Time]",
+        "  - ## Executive Summary (with your recommendation and confidence level)",
+        "  - ## Financial Analysis (from Cost Analyst)",
+        "  - ## Lifestyle & Culture Analysis (from Sentiment Analyst)",
+        "  - ## Migration Insights (from Migration Researcher)",
+        "  - ## Final Recommendation (detailed justification)",
+        "  - ## Key Supporting Factors (bulleted list)",
+        "  - ## Key Concerns (bulleted list)",
+        "  - ## Next Steps (bulleted list)",
+        "Format it as a well-structured, professional markdown document with proper headings, bullets, and formatting.",
+        "After saving, confirm the file was saved successfully with the full filename.",
     ],
     output_schema=FinalRecommendation,
     add_member_tools_to_context=False,
