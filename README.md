@@ -1,0 +1,208 @@
+# Should I Move? 🏙️ → 🌆
+
+AI-powered city relocation decision assistant using coordinated agents to analyze cost of living, city culture, and real migration experiences from Reddit.
+
+## Features
+
+✅ **Real Cost of Living Data** - Scrapes NerdWallet for actual cost comparisons  
+✅ **City Vibe Analysis** - Analyzes culture, livability, and lifestyle fit  
+✅ **Reddit Migration Insights** - Searches Reddit for real experiences from people who made similar moves  
+✅ **Comprehensive Recommendations** - Synthesizes all data into actionable advice  
+
+## Quick Start
+
+### 1. Setup Environment
+
+```bash
+# Create virtual environment (recommended)
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install dependencies
+pip install agno openai python-dotenv requests
+```
+
+### 2. Configure API Keys
+
+Create a `.env` file in the project root:
+
+```bash
+# Required API Keys
+OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FIRECRAWL_API_KEY=fc-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+BRAVE_API_KEY=BSxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+**Get your API keys:**
+- OpenAI: https://platform.openai.com/api-keys
+- Firecrawl: https://firecrawl.dev/
+- Brave Search: https://brave.com/search/api/ (free tier: 2,000 queries/month)
+
+### 3. Run the App
+
+```bash
+python 02-agno-coordination.py
+```
+
+The app will:
+1. Ask about your current and desired cities
+2. Gather your financial situation and preferences
+3. Analyze cost of living, city culture, and Reddit discussions
+4. Provide a comprehensive recommendation
+
+## Project Structure
+
+```
+should-i-move/
+├── 02-agno-coordination.py          # Main application
+├── .env                              # API keys (create this)
+├── README.md                         # This file
+├── brave_tools/                      # Reddit search via Brave API
+│   ├── brave_search_tool.py         # Custom search tool
+│   ├── test_brave_integration.py    # Tests
+│   └── README.md                     # Tool documentation
+├── data/                             # NerdWallet city database
+│   └── nerdwallet_cities_comprehensive.json
+├── nerdwallet-tools/                 # Cost of living utilities
+│   ├── city_matcher.py
+│   ├── create_city_database.py
+│   └── validate_cities.py
+└── docs/                             # Documentation
+    └── archive/                      # Setup guides & debug files
+```
+
+## How It Works
+
+### Agent Architecture
+
+The app uses a **Team of Specialized Agents**:
+
+1. **Cost Analyst** 💰
+   - Fetches real cost data from NerdWallet
+   - Compares housing, food, transportation, taxes
+   - Provides financial impact summary
+
+2. **Sentiment Analyst** 🎭
+   - Analyzes city vibe and culture
+   - Assesses livability based on user preferences
+   - Identifies pros and cons
+
+3. **Migration Researcher** 🔍
+   - Searches Reddit for real migration stories
+   - Extracts common reasons, challenges, outcomes
+   - Highlights what Redditors are saying
+
+4. **Team Coordinator** 🎯
+   - Synthesizes all agent insights
+   - Provides final recommendation
+   - Suggests next steps
+
+### Reddit Search (Custom Brave Tool)
+
+Instead of using Reddit's API (which has authentication issues), we use **Brave Search** with `site:reddit.com` queries to find discussions:
+
+```
+site:reddit.com should I move from Seattle to New York
+site:reddit.com moved from Seattle to New York
+site:reddit.com Seattle to New York relocation
+```
+
+This approach:
+- ✅ Avoids Reddit API auth complexity
+- ✅ Gets comprehensive search results
+- ✅ Works reliably in all environments
+- ✅ No dependency issues
+
+## Testing
+
+### Test Brave Search Integration
+```bash
+python brave_tools/test_brave_integration.py
+```
+
+Expected output:
+```
+🎉 All tests passed! Custom Brave Search integration is working!
+✅ No dependency issues!
+✅ Works in your .venv environment!
+```
+
+## Example Output
+
+```json
+{
+  "recommendation": "Recommend moving with careful financial planning",
+  "confidence_level": "Medium-High",
+  "key_supporting_factors": [
+    "Strong career growth opportunities in NYC tech scene",
+    "Better alignment with preference for urban density and culture",
+    "Public transit eliminates car expenses"
+  ],
+  "key_concerns": [
+    "19% higher cost of living overall",
+    "Housing costs 45% more expensive",
+    "Smaller living spaces require adjustment"
+  ],
+  "reddit_insights": "Based on 12 Reddit discussions, Redditors commonly mention the cost increase is real but career opportunities offset it..."
+}
+```
+
+## API Usage & Limits
+
+| Service | Free Tier | Usage Per Analysis |
+|---------|-----------|-------------------|
+| OpenAI | Pay-per-use | ~$0.01-0.05 |
+| Firecrawl | Varies | 1 scrape |
+| Brave Search | 2,000/month | 4 searches |
+
+**Estimated capacity:** ~500 city pair analyses per month on free tiers
+
+## Troubleshooting
+
+### "BRAVE_API_KEY not set"
+- Create `.env` file in project root
+- Add: `BRAVE_API_KEY=BSxxxxx`
+- Restart terminal/IDE
+
+### "City not found in database"
+- Run: `python nerdwallet-tools/validate_cities.py`
+- Check city name spelling
+- Try "City, State" format (e.g., "Seattle, WA")
+
+### "No Reddit discussions found"
+- Normal for uncommon city pairs
+- Agent falls back to general knowledge
+- Not an error
+
+## Development
+
+### City Database
+The app includes a comprehensive database of ~200 US cities with NerdWallet URL formats. To update:
+
+```bash
+python nerdwallet-tools/create_city_database.py
+```
+
+### Adding New Tools
+Custom tools can be added to agents. See `brave-tools/brave_search_tool.py` for an example.
+
+## Documentation
+
+Detailed setup guides and troubleshooting docs are in `docs/archive/`:
+- Brave Search setup
+- Migration researcher updates
+- venv troubleshooting
+- Alternative approaches attempted
+
+## License
+
+MIT
+
+## Contributing
+
+Feel free to submit issues or PRs for:
+- Additional data sources
+- New analysis agents
+- City database improvements
+- UI enhancements
+

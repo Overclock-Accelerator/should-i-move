@@ -13,6 +13,9 @@ from agno.team.team import Team
 from agno.tools.firecrawl import FirecrawlTools
 from pydantic import BaseModel, Field
 
+# Import custom Brave Search tool
+from brave_tools.brave_search_tool import search_reddit_discussions
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -134,6 +137,12 @@ class SentimentAnalysis(BaseModel):
 class MigrationInsights(BaseModel):
     """Insights from people who made similar moves"""
     number_of_sources: int = Field(..., description="Number of migration stories analyzed")
+    reddit_insights_included: bool = Field(
+        ..., description="Whether Reddit discussions were successfully analyzed"
+    )
+    redditor_perspectives: str = Field(
+        ..., description="Summary of what Redditors are saying about this move, including key quotes or themes"
+    )
     common_reasons_for_moving: List[str] = Field(
         ..., description="Common reasons people gave for the move"
     )
@@ -405,21 +414,28 @@ migration_researcher = Agent(
     model=OpenAIChat("gpt-5-mini"),
     role="Finds and summarizes experiences from people who made similar moves",
     description=(
-        "You are a research specialist focused on finding real-world experiences. "
-        "Find and summarize stories from people who moved from the user's current city to their desired city. "
+        "You are a research specialist focused on finding real-world experiences from Reddit. "
+        "You use Brave Search to find Reddit discussions about people who moved from the user's current city to their desired city. "
         "Extract common themes, challenges, and outcomes from these migration stories. "
-        "For now, provide generic placeholder insights based on typical migration patterns. "
-        "Later, you will use real web scraping tools to find blog posts and Reddit discussions."
+        "You have access to search_reddit_discussions function to search Reddit via Brave Search API."
     ),
     instructions=[
-        "Summarize experiences from people who made similar moves",
-        "Identify common reasons people gave for moving",
-        "Highlight common challenges faced during/after the move",
-        "Report common positive outcomes",
-        "Note any regrets or warnings from those who made the move",
-        "Provide a balanced summary of migration experiences",
-        "Note: Use your general knowledge for now; real blog/Reddit scraping tools will be added later"
+        "FIRST: Use the search_reddit_discussions function with the current_city and desired_city",
+        "The function will automatically search Reddit using multiple query variations via Brave Search",
+        "It returns formatted Reddit discussion results including titles, URLs, and descriptions",
+        "Analyze the returned Reddit discussions to extract insights",
+        "SPECIFICALLY call out what Redditors are saying in the 'redditor_perspectives' field",
+        "Include direct themes, common sentiments, or representative perspectives from the discussions",
+        "Identify common reasons people gave for moving from the Reddit results",
+        "Highlight common challenges mentioned in the discussions",
+        "Report common positive outcomes from the Reddit threads",
+        "Note any regrets or warnings shared by Redditors who made this move",
+        "Set 'reddit_insights_included' to True if Reddit data was successfully retrieved (function returns discussions)",
+        "Set 'number_of_sources' to the count of Reddit discussions found (mentioned in the function output)",
+        "Provide a balanced summary of migration experiences based on the Reddit search results",
+        "If the function returns an error or no results, set 'reddit_insights_included' to False and use general knowledge"
     ],
+    tools=[search_reddit_discussions],
     output_schema=MigrationInsights,
     markdown=True,
 )
