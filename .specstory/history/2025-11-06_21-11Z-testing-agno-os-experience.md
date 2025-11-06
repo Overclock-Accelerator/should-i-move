@@ -254,3 +254,194 @@ The team is conversational, so you can also just chat naturally about your reloc
 
 ---
 
+_**User (2025-11-06 20:41Z)**_
+
+do any of my agents use any files in @brave_tools or @nerdwallet-tools if not lets put them into a folder to not confuse learners. These are not agent tools they were helpers to create data.
+
+---
+
+_**Agent (model claude-4.5-sonnet-thinking, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user is asking whether any of their agents use files from `brave_tools` or `nerdwallet-tools` folders. Let me check the agent files to see what they import and use.
+
+From what I saw earlier:
+1. `04-agno-agentos.py` imports: `from brave_tools.brave_search_tool import search_reddit_discussions`
+2. The other agent files likely have similar imports
+
+Let me check all the main agent files to see what they import from these folders.
+
+The user mentions that `brave_tools` and `nerdwallet-tools` were helpers to create data, not agent tools. But I need to verify if the agents actually use them directly.
+
+Let me search for imports of these modules in the agent files.</details></think>
+
+---
+
+I'll check if any of your agent files actually use these folders.
+
+---
+
+<tool-use data-tool-type="grep" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "from brave_tools|from nerdwallet" in "." • 6 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `.\04-agno-agentos.py` | `from brave_tools.brave_search_tool import search_reddit_discussions` | L39 |
+| `.\02-agno-router.py` | `from brave_tools.brave_search_tool import search_reddit_discussions` | L19 |
+| `.\01-agno-coordination.py` | `from brave_tools.brave_search_tool import search_reddit_discussions` | L19 |
+| `.\03-agno-cooperation.py` | `from brave_tools.brave_search_tool import search_reddit_discussions` | L20 |
+| `.\brave_tools\test_brave_integration.py` | `# Add parent directory to path to import from brave_tools` | L26 |
+| `.\brave_tools\test_brave_integration.py` | `from brave_tools.brave_search_tool import search_reddit_discussions` | L31 |
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="grep" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "import brave_tools|import nerdwallet" in "." • 0 matches</summary>
+
+Output mode: content
+
+
+_No matches found_
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Good! So I found that:
+1. **`brave_tools` IS used** - All 4 agent files import `search_reddit_discussions` from `brave_tools.brave_search_tool`
+2. **`nerdwallet-tools` is NOT used** - No imports found
+
+So:
+- `brave_tools` should STAY - it's actively used by agents
+- `nerdwallet-tools` should be MOVED to a helper/utility folder since it was just used to create data
+
+Let me verify what's in nerdwallet-tools and check if it's referenced anywhere else.</details></think>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="list_dir">
+<details>
+            <summary>Tool use: **list_directory** • Listed directory undefined • **0** results</summary>
+        
+No results found
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="grep" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "nerdwallet-tools" in "." • 27 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `.\04-agno-agentos-approach\README.md` | `cd nerdwallet-tools` | L275 |
+| `.\README.md` | `├── nerdwallet-tools/                 # Cost of living utilities` | L122 |
+| `.\README.md` | `- Run: `python nerdwallet-tools/validate_cities.py`` | L273 |
+| `.\README.md` | `python nerdwallet-tools/create_city_database.py` | L288 |
+| `.\01-agno-coordination-approach\README.md` | `cd nerdwallet-tools` | L204 |
+| `.\01-agno-coordination-approach\README.md` | `cd nerdwallet-tools` | L227 |
+| `.\01-agno-coordination-approach\README.md` | `cd nerdwallet-tools` | L234 |
+| `.\01-agno-coordination-approach\README.md` | `- `nerdwallet-tools/create_city_database.py` - City database generator` | L387 |
+| `.\01-agno-coordination-approach\README.md` | `- `nerdwallet-tools/city_matcher.py` - Test city matching` | L388 |
+| `.\01-agno-coordination-approach\README.md` | `- `nerdwallet-tools/test_cost_scraper.py` - Test NerdWallet scraping` | L389 |
+| `.\start-agentos.sh` | `python nerdwallet-tools/create_city_database.py` | L110 |
+| `.\start-agentos.bat` | `python nerdwallet-tools\create_city_database.py` | L100 |
+| `.\02-agno-router.py` | `print("⚠️  City database not found. Run 'python nerdwallet-tools/create_city_database.py' first.")` | L31 |
+| `.\01-agno-coordination.py` | `print("⚠️  City database not found. Run 'python nerdwallet-tools/create_city_database.py' first.")` | L31 |
+| `.\03-agno-cooperation-approach\README.md` | `- City database from `nerdwallet-tools`` | L200 |
+| `.\03-agno-cooperation-approach\README.md` | `- `nerdwallet-tools/` - City database tools` | L232 |
+| `.\03-agno-cooperation.py` | `print("⚠️  City database not found. Run 'python nerdwallet-tools/create_city_database.py' first.")` | L39 |
+| `.\docs\CLEANUP_SUMMARY.md` | `├── nerdwallet-tools/                 # Cost analysis tools` | L61 |
+| `.\docs\CLEANUP_SUMMARY.md` | `- Use `nerdwallet-tools/` for city database management` | L85 |
+| `.\02-agno-coordination-approach\README.md` | `cd nerdwallet-tools` | L69 |
+| `.\02-agno-coordination-approach\README.md` | `cd nerdwallet-tools` | L93 |
+| `.\02-agno-coordination-approach\README.md` | `cd nerdwallet-tools` | L109 |
+| `.\data\README.md` | `- Generated by `nerdwallet-tools/create_city_database.py`` | L11 |
+| `.\data\README.md` | `- Generated by `nerdwallet-tools/scrape_city_list.py`` | L19 |
+| `.\data\README.md` | `- Generated by `nerdwallet-tools/scrape_city_list.py`` | L24 |
+| `.\data\README.md` | `- Generated by `nerdwallet-tools/validate_cities.py`` | L34 |
+| `.\data\README.md` | `cd ../nerdwallet-tools` | L42 |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Alright, so the situation is:
+
+**`brave_tools`**: 
+- ACTIVELY USED by all 4 agent files
+- Should NOT be moved
+
+**`nerdwallet-tools`**:
+- NOT imported by any agent code
+- Only referenced in documentation and startup scripts for creating the city database
+- These are helper utilities for data generation
+- Should be moved to a utilities folder
+
+The user is right - `nerdwallet-tools` should be moved to make it clear these are data generation helpers, not agent tools. However, `brave_tools` needs to stay because it's actively imported and used.
+
+Let me create a clear summary and propose a solution.</details></think>
+
+---
+
+Great question! Let me check the usage:
+
+## Findings
+
+**`brave_tools/` - ACTIVELY USED ✓**
+- All 4 agent files import `search_reddit_discussions` from here
+- This is a real agent tool - the Migration Researcher uses it
+- **Should STAY at root level**
+
+**`nerdwallet-tools/` - NOT USED BY AGENTS ✗**
+- Not imported by any agent code
+- Only referenced in setup scripts and docs
+- These are data generation utilities
+- **Should be moved to utilities folder**
+
+## Recommendation
+
+Create a `_utilities/` or `_setup-tools/` folder and move `nerdwallet-tools` there:
+
+```
+should-i-move/
+├── brave_tools/              # Keep - used by agents
+├── _utilities/               # New folder for helpers
+│   └── nerdwallet-tools/     # Move here
+├── 01-agno-coordination.py
+└── ...
+```
+
+The underscore prefix makes it clear these are supporting tools, not core functionality.
+
+**Plan:**
+1. Create `_utilities/` folder
+2. Move `nerdwallet-tools/` into it
+3. Update references in:
+   - README files
+   - Start scripts (`start-agentos.bat`, `start-agentos.sh`)
+   - Error messages in agent files
+   - `data/README.md`
+
+Would you like me to make these changes?
+
+---
+
