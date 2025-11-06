@@ -2,6 +2,8 @@ from typing import List, Optional
 import os
 import re
 import json
+import time
+import threading
 from dotenv import load_dotenv
 from difflib import get_close_matches
 
@@ -23,6 +25,58 @@ try:
 except FileNotFoundError:
     print("⚠️  City database not found. Run 'python nerdwallet-tools/create_city_database.py' first.")
     print("   Falling back to basic URL formatting.")
+
+
+# ============================================================================
+# Animation Helper
+# ============================================================================
+
+class ThinkingAnimation:
+    """Animated thinking indicator"""
+    
+    def __init__(self, message: str = "Thinking"):
+        self.message = message
+        self.is_running = False
+        self.thread = None
+        self.frames = [
+            "▰▱▱▱▱▱▱",
+            "▰▰▱▱▱▱▱",
+            "▰▰▰▱▱▱▱",
+            "▰▰▰▰▱▱▱",
+            "▰▰▰▰▰▱▱",
+            "▰▰▰▰▰▰▱",
+            "▰▰▰▰▰▰▰",
+            "▱▰▰▰▰▰▰",
+            "▱▱▰▰▰▰▰",
+            "▱▱▱▰▰▰▰",
+            "▱▱▱▱▰▰▰",
+            "▱▱▱▱▱▰▰",
+            "▱▱▱▱▱▱▰",
+            "▱▱▱▱▱▱▱",
+        ]
+    
+    def _animate(self):
+        """Animation loop"""
+        idx = 0
+        while self.is_running:
+            frame = self.frames[idx % len(self.frames)]
+            print(f"\r{frame} {self.message}...", end="", flush=True)
+            time.sleep(0.1)
+            idx += 1
+    
+    def start(self):
+        """Start the animation"""
+        self.is_running = True
+        self.thread = threading.Thread(target=self._animate, daemon=True)
+        self.thread.start()
+    
+    def stop(self):
+        """Stop the animation"""
+        self.is_running = False
+        if self.thread:
+            self.thread.join(timeout=0.5)
+        # Clear the line
+        print("\r" + " " * 80 + "\r", end="", flush=True)
 
 
 # ============================================================================
@@ -454,7 +508,10 @@ def gather_user_information(debug=False):
         print("\nLet's start with the basics then.\n")
         initial_input = "I'm considering a move but haven't decided yet."
     
-    print("\n▰▰▰▰▰▱▱ Analyzing your response...", flush=True)
+    # Start animation
+    animation = ThinkingAnimation("Analyzing your response")
+    print()
+    animation.start()
     
     # Use an agent to interpret the input and ask follow-up questions
     # Note: We'll use this agent WITHOUT output_schema first to ask questions,
@@ -466,21 +523,26 @@ def gather_user_information(debug=False):
         description=(
             "You are a friendly assistant helping gather information from a user "
             "who is considering moving to a new city. Based on what they've told you, "
-            "ask follow-up questions to gather missing information. Be conversational "
-            "and friendly."
+            "ask follow-up questions to gather missing information one at a time. "
+            "Be conversational, friendly, and natural."
         ),
         instructions=[
             "Review what the user has already provided",
-            "Identify what CRITICAL information is missing:",
-            "  - SPECIFIC current city name (not just a state)",
-            "  - SPECIFIC desired destination city name (not just a state - must be a specific city)",
-            "  - At least SOME financial information (income OR expenses OR general budget concerns)",
-            "  - At least SOME preferences about what they value in a city",
-            "Ask questions naturally and conversationally",
+            "Identify what information is still missing",
+            "Ask ONLY ONE question (or ONE topic with closely related sub-parts) at a time",
+            "Be conversational and natural - like a friend helping them think through their decision",
+            "Don't overwhelm them with multiple unrelated questions",
+            "Priority order for missing information:",
+            "  1. SPECIFIC current city - if they said 'New York', clarify if they mean NYC and which borough",
+            "  2. SPECIFIC desired city - if they said a state, ask which city in that state",
+            "  3. Financial information - ask about income AND monthly expenses together (they're related)",
+            "  4. City preferences and current city opinions - what they value, like, and dislike",
+            "Examples of good single questions:",
+            "  - 'When you say New York, do you mean New York City? If so, which borough (Manhattan, Brooklyn, etc.)?'",
+            "  - 'Can you share your household income and typical monthly expenses? Ranges are fine.'",
+            "  - 'What do you value most in a city, and what do you like/dislike about where you live now?'",
             "Don't ask for information they've already provided",
-            "Focus on getting specific city names - 'Florida' is NOT specific enough",
-            "If they said a state, ask which city in that state",
-            "You can ask 2-3 questions at a time, but keep it manageable",
+            "Keep it friendly and conversational - avoid sounding like an interrogation",
         ],
         markdown=False,
     )
@@ -501,10 +563,12 @@ def gather_user_information(debug=False):
     
     # Build conversation context
     conversation_history = f"User's initial input: {initial_input}\n\n"
-    max_questions = 6  # Allow more rounds to gather comprehensive info
+    max_questions = 8  # Allow more rounds since we're asking one question at a time
     question_count = 0
     
-    print("\nGreat! Let me ask you a few questions to understand your situation better.\n")
+    # Stop animation
+    animation.stop()
+    print("Great! Let me ask you a few questions to understand your situation better.\n")
     
     # Helper function to check if we have comprehensive required info
     def has_comprehensive_info(history):
@@ -529,8 +593,8 @@ def gather_user_information(debug=False):
         has_dislikes = any(term in history_lower for term in 
                           ["dislike", "hate", "don't like", "problem with", "issue with", "bad thing"])
         
-        # Must have asked at least 2 rounds of questions to be thorough
-        min_question_rounds = question_count >= 2
+        # Must have asked at least 3 rounds since we're asking one at a time
+        min_question_rounds = question_count >= 3
         
         # Require comprehensive coverage:
         # - At least one financial metric (income OR expenses)
@@ -557,13 +621,19 @@ def gather_user_information(debug=False):
                 if debug:
                     print("[DEBUG] Comprehensive info threshold met, attempting extraction...", flush=True)
                 
-                print("\n▰▰▰▰▰▱▱ Finalizing your profile...", flush=True)
+                # Animate profile extraction
+                profile_animation = ThinkingAnimation("Finalizing your profile")
+                print()
+                profile_animation.start()
+                
                 try:
                     profile = profile_extractor.run(
                         conversation_history + "\nExtract the complete UserProfile from this conversation. "
                         "Ensure current_city and desired_city are specific city names.",
                         stream=False
                     )
+                    
+                    profile_animation.stop()
                     
                     if debug:
                         print(f"[DEBUG] Extracted profile: {profile.content}")
@@ -581,6 +651,7 @@ def gather_user_information(debug=False):
                         if debug:
                             print("[DEBUG] Profile validation failed - cities not specific enough")
                 except Exception as e:
+                    profile_animation.stop()
                     if debug:
                         print(f"[DEBUG] Extraction failed: {e}")
             
@@ -590,19 +661,26 @@ def gather_user_information(debug=False):
             
             question_prompt = (
                 conversation_history + 
-                "\nBased on the conversation so far, what information is still missing to provide a comprehensive analysis? "
-                "Generate 1-3 friendly, conversational questions to ask the user. Make sure to gather:\n"
-                "1. SPECIFIC city names (if they said a state, ask which city)\n"
-                "2. Financial information - BOTH income AND monthly expenses if possible\n"
-                "3. What they value or prioritize in a city (lifestyle, culture, activities, etc.)\n"
-                "4. What they LIKE about their current city\n"
-                "5. What they DISLIKE about their current city\n\n"
-                "Don't ask for information already provided. Focus on filling gaps. "
-                "Be friendly and conversational. Just provide the questions."
+                "\nBased on the conversation so far, what is the MOST IMPORTANT piece of missing information? "
+                "Ask ONE question (or ONE topic with closely related sub-parts) to gather it.\n\n"
+                "Priority order:\n"
+                "1. If cities are vague (like 'New York' or 'Florida'), clarify to get SPECIFIC city/borough\n"
+                "2. If no financial info, ask about income AND expenses together (since they're related)\n"
+                "3. If no preferences, ask what they value AND what they like/dislike about current city\n\n"
+                "IMPORTANT: Ask only ONE question. Don't bundle multiple unrelated topics.\n"
+                "Be natural and conversational, like a friend helping them think through this decision.\n"
+                "Don't repeat information they've already provided.\n\n"
+                "Just provide the question to ask - nothing else."
             )
             
-            print("\n▰▰▰▰▰▱▱ Thinking...", flush=True)
+            # Animate question generation
+            question_animation = ThinkingAnimation("Thinking")
+            print()
+            question_animation.start()
+            
             question_response = question_agent.run(question_prompt, stream=False)
+            
+            question_animation.stop()
             
             if debug:
                 print(f"[DEBUG] Question response: {question_response.content}")
@@ -632,7 +710,12 @@ def gather_user_information(debug=False):
     try:
         if debug:
             print("[DEBUG] Making final attempt to extract profile...", flush=True)
-        print("\n▰▰▰▰▰▱▱ Processing your information...", flush=True)
+        
+        # Animate final processing
+        final_animation = ThinkingAnimation("Processing your information")
+        print()
+        final_animation.start()
+        
         final_response = profile_extractor.run(
             conversation_history + 
             "\nExtract the UserProfile from all available information. "
@@ -640,8 +723,14 @@ def gather_user_information(debug=False):
             "If only a state was mentioned, note that in the city field but try to get a city name.",
             stream=False
         )
+        
+        final_animation.stop()
         return final_response.content
     except Exception as e:
+        try:
+            final_animation.stop()
+        except:
+            pass
         if debug:
             print(f"[DEBUG] Final extraction failed: {e}")
         print(f"Error gathering information: {e}")
