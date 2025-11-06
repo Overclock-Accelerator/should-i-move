@@ -1210,7 +1210,89 @@ tools=[LocalFileSystemTools(
 
 The issue might be that the agent needs to use just the filename without any directory path prefix when calling write_file, since the target_directory is already set. Or maybe the agent is providing a full path that overrides the target_directory.
 
-Let me update the instructions</details></think>
+Let me update the instructions to be more explicit that the agent should only provide the filename, not a path, since the target_directory is already configured.</details></think>
+
+---
+
+I need to update the instructions to ensure the coordinator only provides the filename (without path) since the `target_directory` is already configured. Let me fix this:
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **code_edit** • Edit file: c:\CodeWork\should-i-move\02-agno-coordination.py</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -487,8 +487,9 @@
+          &quot;Step 4 - Save Report:&quot;,
+          &quot;After synthesizing the final recommendation, save a comprehensive markdown report using the write_file tool.&quot;,
++         &quot;IMPORTANT: Only provide the FILENAME (no path/directory), as files automatically save to the reports/ folder.&quot;,
+          &quot;The filename should be: &#39;{current_city}_to_{desired_city}_{timestamp}_analysis.md&#39;&quot;,
+          &quot;  - Normalize city names to lowercase with underscores, remove special characters&quot;,
+          &quot;  - Use timestamp format: YYYYMMDD_HHMMSS (e.g., 20250106_143022)&quot;,
+-         &quot;  - Example: &#39;dallas_to_austin_20250106_143022_analysis.md&#39;&quot;,
++         &quot;  - Example filename: &#39;dallas_to_austin_20250106_143022_analysis.md&#39; (NO &#39;reports/&#39; prefix)&quot;,
+          &quot;The markdown report should include:&quot;,
+          &quot;  - # Title: Should You Move from {Current City} to {Desired City}?&quot;,
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+I've updated the instructions to make it clear the agent should only provide the filename without any path prefix. The LocalFileSystemTools with target_directory="./reports" should handle putting it in the right folder automatically.
+
+Let me also check if we need to ensure the reports directory exists before running.</details></think>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 1 file</summary>
+      
+Lint paths:
+
+- `c:\CodeWork\should-i-move\02-agno-coordination.py`
+
+Lint results
+
+Lint errors for `02-agno-coordination.py`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| Import "os" is not accessed | 2:8-2:10 | DIAGNOSTIC_SEVERITY_HINT |
+| Import "datetime" is not accessed | 7:22-7:30 | DIAGNOSTIC_SEVERITY_HINT |
+| Variable "BLUE" is not accessed | 526:5-526:9 | DIAGNOSTIC_SEVERITY_HINT |
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Good, no linting errors. The instructions are now very explicit that the agent should only provide the filename without any path prefix. The LocalFileSystemTools with target_directory="./reports" should automatically save files to the reports folder.
+
+However, I should also verify that the reports directory exists and will be created if it doesn't. LocalFileSystemTools should handle this automatically, but let me make sure the directory exists.</details></think>
+
+---
+
+Perfect! I've updated the instructions to explicitly tell the coordinator to provide **only the filename** (without any path or directory prefix) when using the `write_file` tool. 
+
+Since `LocalFileSystemTools` is configured with `target_directory="./reports"`, it will automatically save files to the `reports/` folder when given just a filename.
+
+The key change:
+- **Before**: Agent might have been providing full paths like `reports/filename.md` or `./filename.md`
+- **Now**: Clear instruction to provide only the filename like `dallas_to_austin_20250106_143022_analysis.md`
+
+The `LocalFileSystemTools` will handle the directory management automatically and save it to `./reports/` as configured. This should fix the issue with files appearing in the main folder.
 
 ---
 

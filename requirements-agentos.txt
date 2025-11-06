@@ -1,0 +1,26 @@
+# AgentOS Integration Requirements
+# Install with: pip install -r requirements-agentos.txt
+
+# Core Agno with AgentOS support
+agno[postgres,knowledge]>=0.1.0
+
+# Web framework for AgentOS server
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+
+# Database and vector storage
+psycopg[binary]>=3.2.0
+pgvector>=0.3.0
+sqlalchemy>=2.0.0
+
+# AI/ML
+openai>=1.54.0
+pydantic>=2.10.0
+
+# Web scraping and search
+firecrawl-py>=1.5.0
+requests>=2.32.0
+
+# Utilities
+python-dotenv>=1.0.0
+

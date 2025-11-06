@@ -4,6 +4,7 @@ import re
 import json
 import time
 import threading
+import logging
 from datetime import datetime
 from dotenv import load_dotenv
 from difflib import get_close_matches
@@ -20,6 +21,13 @@ from brave_tools.brave_search_tool import search_reddit_discussions
 
 # Load environment variables from .env file
 load_dotenv()
+
+# Suppress debug logging from Agno framework and related libraries
+# This prevents verbose DEBUG output during synthesis
+logging.getLogger("agno").setLevel(logging.WARNING)
+logging.getLogger("phi").setLevel(logging.WARNING)
+logging.getLogger("openai").setLevel(logging.WARNING)
+logging.getLogger("httpx").setLevel(logging.WARNING)  # Suppress HTTP request logs
 
 # Load city database for URL formatting
 CITY_DATABASE = {}
@@ -106,6 +114,10 @@ class UserProfile(BaseModel):
         default_factory=list,
         description="What the user dislikes about their current city"
     )
+    most_important_factor: Optional[str] = Field(
+        None,
+        description="The single most important factor for the user in making this decision (e.g., 'affordability', 'job opportunities', 'culture', 'family proximity')"
+    )
 
 
 class CostAnalysis(BaseModel):
@@ -119,6 +131,9 @@ class CostAnalysis(BaseModel):
     taxes_comparison: str = Field(..., description="Tax differences")
     key_insights: List[str] = Field(
         ..., description="Key financial insights from the comparison"
+    )
+    perspective_on_user_priority: str = Field(
+        ..., description="How the cost analysis relates to the user's most important factor"
     )
 
 
@@ -134,6 +149,9 @@ class SentimentAnalysis(BaseModel):
     )
     notable_pros: List[str] = Field(..., description="Notable positive aspects")
     notable_cons: List[str] = Field(..., description="Notable negative aspects")
+    perspective_on_user_priority: str = Field(
+        ..., description="How the lifestyle/cultural factors relate to the user's most important factor"
+    )
 
 
 class MigrationInsights(BaseModel):
@@ -158,6 +176,29 @@ class MigrationInsights(BaseModel):
         ..., description="Any regrets or warnings from those who made the move"
     )
     summary: str = Field(..., description="Overall summary of migration experiences")
+    perspective_on_user_priority: str = Field(
+        ..., description="How real migration experiences relate to the user's most important factor"
+    )
+
+
+class DebateSummary(BaseModel):
+    """Summary of the debate between agents"""
+    debate_rounds: int = Field(..., description="Number of discussion rounds that occurred")
+    key_points_of_agreement: List[str] = Field(
+        ..., description="Main points where all agents agreed"
+    )
+    key_points_of_disagreement: List[str] = Field(
+        ..., description="Main points where agents had different perspectives"
+    )
+    how_user_priority_influenced_debate: str = Field(
+        ..., description="How the user's most important factor shaped the discussion and consensus"
+    )
+    consensus_reached: str = Field(
+        ..., description="The final consensus the team reached through discussion"
+    )
+    debate_highlights: List[str] = Field(
+        ..., description="Notable moments or insights from the collaborative discussion"
+    )
 
 
 class FinalRecommendation(BaseModel):
@@ -180,11 +221,15 @@ class FinalRecommendation(BaseModel):
     lifestyle_impact_summary: str = Field(
         ..., description="Summary of expected lifestyle impact"
     )
+    alignment_with_user_priority: str = Field(
+        ..., description="How well the recommendation aligns with what the user values most"
+    )
+    debate_summary: DebateSummary = Field(...)  # No description on nested model fields
     next_steps: List[str] = Field(
         ..., description="Suggested next steps for the user"
     )
     detailed_justification: str = Field(
-        ..., description="Detailed explanation of the recommendation based on all sub-agent inputs"
+        ..., description="Detailed explanation of the recommendation based on collaborative discussion"
     )
 
 
@@ -359,92 +404,135 @@ Please provide analysis based on your general knowledge of {current_city} and {d
 
 
 # ============================================================================
-# Specialized Sub-Agents
+# Specialized Sub-Agents (Cooperation Mode)
 # ============================================================================
 
 cost_analyst = Agent(
     name="Cost Analyst",
     model=OpenAIChat("gpt-5-mini"),
-    role="Analyzes cost of living differences between cities",
+    role="Analyzes cost of living differences between cities with emphasis on user's priority",
     description=(
         "You are a financial analyst specializing in cost of living comparisons. "
-        "Analyze the cost differences between the user's current city and their desired city. "
-        "You have access to real-time cost of living data from NerdWallet. "
-        "Use the get_cost_of_living_comparison function to fetch actual data, then analyze it."
+        "You participate in collaborative discussions with other agents to reach consensus. "
+        "While you provide cost analysis expertise, you must always consider and defer to "
+        "the user's most important factor, even if the financial data suggests a different perspective."
     ),
     instructions=[
-        "FIRST: Use the get_cost_of_living_comparison function to fetch real cost of living data",
-        "Extract specific metrics from the data: overall cost difference %, housing, transportation, food, entertainment, healthcare",
-        "Provide a comprehensive cost of living analysis based on the real data",
-        "Compare housing costs (rent/mortgage, utilities) with specific numbers",
-        "Compare food and grocery costs with specific percentages or dollar amounts",
-        "Compare transportation costs (public transit, car ownership, gas)",
-        "Compare tax implications (state/local taxes)",
-        "Provide practical insights about the financial impact using the real data",
-        "If the tool fails, fall back to general knowledge but note this in your analysis"
+        "You are participating in a COLLABORATIVE DEBATE with other specialists",
+        "CRITICAL: Always consider the user's MOST IMPORTANT FACTOR in your analysis",
+        "If the user prioritizes something other than cost (e.g., culture, job opportunities), acknowledge this",
+        "Be willing to adjust your recommendation based on what the user values most",
+        "Even if the cost data suggests one decision, defer to user priorities if they conflict",
+        "",
+        "FORMAT YOUR RESPONSE:",
+        "- Start with: '💰 COST ANALYST - [Brief summary of your findings]'",
+        "- This helps users see the debate flow in real-time",
+        "",
+        "Your role in the debate:",
+        "- Provide factual cost of living analysis using real data",
+        "- FIRST: Use the get_cost_of_living_comparison function to fetch real data",
+        "- Extract specific metrics: overall cost difference %, housing, transportation, food, taxes",
+        "- Discuss how financial factors support or contradict the user's main priority",
+        "- Listen to other agents' perspectives and find common ground",
+        "- Be open to changing your position based on the user's stated values",
+        "",
+        "During discussion:",
+        "- Present your cost analysis clearly",
+        "- Acknowledge when financial concerns should take a backseat to user priorities",
+        "- Work toward consensus that respects what the user values most",
+        "- If cost is NOT the user's priority, frame your analysis as supporting information, not the deciding factor",
     ],
     tools=[get_cost_of_living_comparison],
     output_schema=CostAnalysis,
     markdown=True,
+    add_name_to_context=True,
 )
 
 sentiment_analyst = Agent(
     name="Sentiment Analyst",
     model=OpenAIChat("gpt-5-mini"),
-    role="Researches city vibe, culture, and livability",
+    role="Researches city vibe, culture, and livability with emphasis on user's priority",
     description=(
-        "You are a city culture and livability expert. "
-        "Research and analyze the general vibe, culture, and livability of the destination city. "
-        "Consider the user's stated preferences when providing your analysis. "
-        "For now, provide generic insights based on common knowledge about the city. "
-        "Later, you will use real web scraping tools to analyze articles and reviews."
+        "You are a city culture and livability expert participating in collaborative discussions. "
+        "While you provide lifestyle and cultural analysis, you must always consider and defer to "
+        "the user's most important factor, even if lifestyle factors suggest a different perspective."
     ),
     instructions=[
-        "Analyze the overall vibe and culture of the destination city",
-        "Assess livability based on the user's preferences",
-        "Identify notable pros and cons",
-        "Provide insights on how well the city matches user preferences",
-        "Consider factors like: arts/culture scene, outdoor activities, social atmosphere, diversity, food scene",
-        "Note: Use your general knowledge for now; real sentiment analysis tools will be added later"
+        "You are participating in a COLLABORATIVE DEBATE with other specialists",
+        "CRITICAL: Always consider the user's MOST IMPORTANT FACTOR in your analysis",
+        "If the user prioritizes something other than lifestyle (e.g., cost, job market), acknowledge this",
+        "Be willing to adjust your recommendation based on what the user values most",
+        "Even if lifestyle factors suggest one decision, defer to user priorities if they conflict",
+        "",
+        "FORMAT YOUR RESPONSE:",
+        "- Start with: '🏙️ SENTIMENT ANALYST - [Brief summary of your findings]'",
+        "- This helps users see the debate flow in real-time",
+        "",
+        "Your role in the debate:",
+        "- Analyze the overall vibe, culture, and livability of the destination city",
+        "- Assess how well the city matches the user's stated preferences",
+        "- Identify notable pros and cons about city life",
+        "- Discuss how lifestyle factors support or contradict the user's main priority",
+        "- Listen to other agents' perspectives and find common ground",
+        "- Be open to changing your position based on the user's stated values",
+        "",
+        "During discussion:",
+        "- Present your lifestyle and cultural analysis clearly",
+        "- Acknowledge when lifestyle factors should take a backseat to user priorities",
+        "- Work toward consensus that respects what the user values most",
+        "- If lifestyle is NOT the user's priority, frame your analysis as supporting information, not the deciding factor",
     ],
     output_schema=SentimentAnalysis,
     markdown=True,
+    add_name_to_context=True,
 )
 
 migration_researcher = Agent(
     name="Migration Researcher",
     model=OpenAIChat("gpt-5-mini"),
-    role="Finds and summarizes experiences from people who made similar moves",
+    role="Finds real experiences from similar moves with emphasis on user's priority",
     description=(
-        "You are a research specialist focused on finding real-world experiences from Reddit. "
-        "You use Brave Search to find Reddit discussions about people who moved from the user's current city to their desired city. "
-        "Extract common themes, challenges, and outcomes from these migration stories. "
-        "You have access to search_reddit_discussions function to search Reddit via Brave Search API."
+        "You are a research specialist focused on finding real-world Reddit experiences. "
+        "You participate in collaborative discussions with other agents. "
+        "While you provide insights from real migration stories, you must always consider and defer to "
+        "the user's most important factor, even if migration stories suggest a different perspective."
     ),
     instructions=[
-        "FIRST: Use the search_reddit_discussions function with the current_city and desired_city",
-        "The function will automatically search Reddit using multiple query variations via Brave Search",
-        "It returns formatted Reddit discussion results including titles, URLs, and descriptions",
-        "Analyze the returned Reddit discussions to extract insights",
-        "SPECIFICALLY call out what Redditors are saying in the 'redditor_perspectives' field",
-        "Include direct themes, common sentiments, or representative perspectives from the discussions",
-        "Identify common reasons people gave for moving from the Reddit results",
-        "Highlight common challenges mentioned in the discussions",
-        "Report common positive outcomes from the Reddit threads",
-        "Note any regrets or warnings shared by Redditors who made this move",
-        "Set 'reddit_insights_included' to True if Reddit data was successfully retrieved (function returns discussions)",
-        "Set 'number_of_sources' to the count of Reddit discussions found (mentioned in the function output)",
-        "Provide a balanced summary of migration experiences based on the Reddit search results",
-        "If the function returns an error or no results, set 'reddit_insights_included' to False and use general knowledge"
+        "You are participating in a COLLABORATIVE DEBATE with other specialists",
+        "CRITICAL: Always consider the user's MOST IMPORTANT FACTOR in your analysis",
+        "If the user prioritizes a specific factor, look for migration stories that address it",
+        "Be willing to adjust your recommendation based on what the user values most",
+        "Even if migration stories suggest one decision, defer to user priorities if they conflict",
+        "",
+        "FORMAT YOUR RESPONSE:",
+        "- Start with: '📊 MIGRATION RESEARCHER - [Brief summary of your findings]'",
+        "- This helps users see the debate flow in real-time",
+        "",
+        "Your role in the debate:",
+        "- FIRST: Use search_reddit_discussions function to find real Reddit migration stories",
+        "- Extract common themes, challenges, and outcomes from Reddit discussions",
+        "- SPECIFICALLY highlight what Redditors say about the user's most important factor",
+        "- Include direct perspectives from the Reddit discussions",
+        "- Discuss how real migration experiences support or contradict the user's main priority",
+        "- Listen to other agents' perspectives and find common ground",
+        "- Be open to changing your position based on the user's stated values",
+        "",
+        "During discussion:",
+        "- Present insights from real people's experiences clearly",
+        "- Pay special attention to Reddit stories that mention the user's priority factor",
+        "- Acknowledge when migration stories should be weighted by user priorities",
+        "- Work toward consensus that respects what the user values most",
+        "- If reddit discussions conflict with user priority, acknowledge the user's values take precedence",
     ],
     tools=[search_reddit_discussions],
     output_schema=MigrationInsights,
     markdown=True,
+    add_name_to_context=True,
 )
 
 
 # ============================================================================
-# Team Coordination
+# Team Coordination (Cooperation Mode)
 # ============================================================================
 
 move_decision_team = Team(
@@ -456,66 +544,99 @@ move_decision_team = Team(
         default_extension="md"
     )],
     instructions=[
-        "You are a coordinator helping users decide whether to move to a new city.",
+        "You are a discussion moderator facilitating a COLLABORATIVE DEBATE between specialists.",
+        "Your role is to guide the team to reach CONSENSUS on whether the user should move.",
         "",
-        "CRITICAL: Do NOT delegate to any sub-agents until you have confirmed you have all necessary information.",
+        "CRITICAL: The user's MOST IMPORTANT FACTOR must be the PRIMARY consideration in the debate.",
+        "All agents must weight their analysis according to what the user values most.",
         "",
         "Step 1 - Information Verification:",
-        "First, review the user profile information provided to you.",
-        "Check if you have ALL of the following essential information:",
+        "Review the user profile to ensure you have:",
         "  - Current city name",
         "  - Desired destination city name",
-        "  - At least SOME information about their financial situation (income, expenses, or general budget concerns)",
-        "  - At least SOME information about their city preferences or what they value",
+        "  - Financial situation (income, expenses, or budget concerns)",
+        "  - City preferences or values",
+        "  - MOST IMPORTANT FACTOR (what matters most to the user)",
         "",
-        "If you are missing any essential information above, you MUST:",
-        "  - Ask the user to provide the missing information",
-        "  - Wait for their response",
-        "  - Do NOT proceed to Step 2 until you have this information",
+        "If missing essential information, ask the user before proceeding.",
         "",
-        "Step 2 - Delegate to Sub-Agents (ONLY after Step 1 is complete):",
-        "Once you have confirmed you have all necessary information, proceed with delegation:",
-        "  - First, delegate to the Cost Analyst to analyze the cost of living differences",
-        "  - Then, delegate to the Sentiment Analyst to research the city's vibe and livability",
-        "  - Then, delegate to the Migration Researcher to find experiences from similar moves",
+        "Step 2 - Initiate Collaborative Debate:",
+        "ANNOUNCE: Start by announcing the debate is beginning and which agents are participating.",
+        "Example: '🎭 Beginning collaborative debate with Cost Analyst, Sentiment Analyst, and Migration Researcher...'",
         "",
-        "Step 3 - Synthesize Results:",
-        "After receiving all three analyses, synthesize the information into a clear recommendation.",
-        "Provide a balanced assessment considering financial, lifestyle, and experiential factors.",
-        "Be honest about uncertainties and suggest next steps for further research.",
+        "Delegate the analysis task TO ALL MEMBERS simultaneously (cooperation mode).",
+        "Frame the task to emphasize the user's most important factor.",
+        "Example: 'The user prioritizes [FACTOR]. Analyze this move with that priority in mind.'",
         "",
-        "Step 4 - Save Report:",
-        "After synthesizing the final recommendation, save a comprehensive markdown report using the write_file tool.",
-        "IMPORTANT: Only provide the FILENAME (no path/directory), as files automatically save to the reports/ folder.",
-        "The filename should be: '{current_city}_to_{desired_city}_{timestamp}_analysis.md'",
-        "  - Normalize city names to lowercase with underscores, remove special characters",
-        "  - Use timestamp format: YYYYMMDD_HHMMSS (e.g., 20250106_143022)",
-        "  - Example filename: 'dallas_to_austin_20250106_143022_analysis.md' (NO 'reports/' prefix)",
-        "The markdown report should include:",
+        "Step 3 - Moderate the Discussion:",
+        "IMPORTANT: You must EXPLICITLY RELAY what each agent says for user visibility.",
+        "",
+        "As you delegate and receive responses:",
+        "  1. ANNOUNCE when you're delegating: '🎭 Delegating to all agents...'",
+        "  2. As EACH agent responds, REPEAT their key findings:",
+        "     - '💰 Cost Analyst reports: [summary of their analysis]'",
+        "     - '🏙️ Sentiment Analyst reports: [summary of their analysis]'",  
+        "     - '📊 Migration Researcher reports: [summary of their analysis]'",
+        "  3. DO NOT just say 'agents are analyzing' - SHOW what they found",
+        "  4. Include key data points and quotes from each agent",
+        "",
+        "Then moderate:",
+        "- Highlight areas of agreement and disagreement",
+        "- Remind agents to weight their analysis by the user's stated priority",
+        "- If multiple discussion rounds occur, announce each round clearly",
+        "- Guide the discussion toward consensus",
+        "- Call out when an agent should defer to the user's priority",
+        "- Determine when the team has reached consensus",
+        "",
+        "Step 4 - Synthesize Consensus:",
+        "ANNOUNCE when the debate has concluded and consensus is reached.",
+        "Example: '✅ Consensus reached after [N] rounds of discussion...'",
+        "",
+        "After the debate concludes, create a comprehensive recommendation that:",
+        "  - Reflects the team's consensus",
+        "  - Prioritizes the user's most important factor",
+        "  - Acknowledges areas where agents initially disagreed",
+        "  - Shows how the user's priority influenced the final decision",
+        "  - Includes a detailed debate summary",
+        "",
+        "Step 5 - Save Report:",
+        "Save a comprehensive markdown report using write_file.",
+        "IMPORTANT: Only provide the FILENAME (no path), files auto-save to reports/ folder.",
+        "Filename format: '{current_city}_to_{desired_city}_cooperation_analysis.md'",
+        "  - Normalize city names to lowercase with underscores",
+        "  - Example: 'dallas_to_austin_cooperation_analysis.md' (NO 'reports/' prefix)",
+        "",
+        "The markdown report must include:",
         "  - # Title: Should You Move from {Current City} to {Desired City}?",
+        "  - ## Subtitle: Collaborative Analysis with Priority: {User's Most Important Factor}",
         "  - ## Report Generated",
-        "    - Date: [Current Date and Time]",
-        "    - Analysis Type: Comprehensive Multi-Agent Analysis (Coordination Pattern)",
-        "  - ## Executive Summary (with your recommendation and confidence level)",
+        "    - Date: [Date and Time]",
+        "    - Analysis Type: Collaborative Multi-Agent Analysis (Cooperation Pattern)",
+        "    - User Priority: {User's Most Important Factor}",
+        "  - ## Executive Summary",
+        "  - ## User's Most Important Factor",
+        "  - ## Debate Summary (key points of agreement/disagreement, how priority influenced discussion)",
         "  - ## Financial Analysis (from Cost Analyst)",
         "  - ## Lifestyle & Culture Analysis (from Sentiment Analyst)",
         "  - ## Migration Insights (from Migration Researcher)",
-        "  - ## Final Recommendation (detailed justification)",
-        "  - ## Key Supporting Factors (bulleted list)",
-        "  - ## Key Concerns (bulleted list)",
-        "  - ## Next Steps (bulleted list)",
+        "  - ## Final Consensus Recommendation",
+        "  - ## How This Recommendation Aligns with Your Priority",
+        "  - ## Key Supporting Factors",
+        "  - ## Key Concerns",
+        "  - ## Next Steps",
         "  - ## Report Metadata",
-        "    - Analysis Pattern: Coordination (Sequential Multi-Agent)",
-        "    - Specialists Consulted: Cost Analyst, Sentiment Analyst, Migration Researcher",
+        "    - Analysis Pattern: Cooperation (Collaborative Debate)",
+        "    - Specialists Consulted: Cost Analyst, Sentiment Analyst, Migration Researcher (all in debate)",
         "    - Report File: [filename]",
         "    - Generated By: Should I Move? - City Relocation Decision Helper",
-        "Format it as a well-structured, professional markdown document with proper headings, bullets, and formatting.",
-        "After saving, confirm the file was saved successfully with the full filename.",
+        "",
+        "After saving, confirm the file was saved successfully.",
     ],
     output_schema=FinalRecommendation,
+    delegate_task_to_all_members=True,  # COOPERATION MODE
+    show_members_responses=False,  # We're showing them manually now
     add_member_tools_to_context=False,
     markdown=True,
-    show_members_responses=True,
 )
 
 
@@ -545,9 +666,11 @@ def gather_user_information(debug=False):
     print(r"  ____) | | | | (_) | |_| | | (_| | _| |_ | |  | |\___/ \_/ \___| |_|  ")
     print(r" |_____/|_| |_|\___/ \__,_|_|\__,_||_____||_|  |_|                 (_)  ")
     print(f"{RESET}")
-    print(f"{GREEN}                    🏙️  City Relocation Decision Helper 🌆{RESET}")
+    print(f"{GREEN}            🏙️  City Move Decision Helper (Cooperation Mode) 🌆{RESET}")
     print(f"{CYAN}{'='*80}{RESET}")
     print(f"\n{YELLOW}Welcome!{RESET} I'll help you decide whether moving to a new city is right for you.")
+    print(f"\n{BOLD}In this version, my team of specialists will DEBATE and reach CONSENSUS.{RESET}")
+    print(f"They'll prioritize what matters MOST to you in their discussion.\n")
     print(f"\nTo get started, tell me about your situation. You can share whatever feels")
     print(f"relevant - your current city, where you're thinking of moving, your financial")
     print(f"situation, what you value in a city, etc.\n")
@@ -564,8 +687,6 @@ def gather_user_information(debug=False):
     animation.start()
     
     # Use an agent to interpret the input and ask follow-up questions
-    # Note: We'll use this agent WITHOUT output_schema first to ask questions,
-    # then WITH output_schema to extract the final profile
     question_agent = Agent(
         name="Question Generator",
         model=OpenAIChat("gpt-5-mini"),
@@ -587,10 +708,12 @@ def gather_user_information(debug=False):
             "  2. SPECIFIC desired city - if they said a state, ask which city in that state",
             "  3. Financial information - ask about income AND monthly expenses together (they're related)",
             "  4. City preferences and current city opinions - what they value, like, and dislike",
+            "  5. MOST IMPORTANT FACTOR - what matters MOST to them (affordability, jobs, culture, family, etc.)",
             "Examples of good single questions:",
             "  - 'When you say New York, do you mean New York City? If so, which borough (Manhattan, Brooklyn, etc.)?'",
             "  - 'Can you share your household income and typical monthly expenses? Ranges are fine.'",
             "  - 'What do you value most in a city, and what do you like/dislike about where you live now?'",
+            "  - 'What's the SINGLE MOST IMPORTANT factor in your decision? (e.g., cost, job opportunities, lifestyle, family)'",
             "Don't ask for information they've already provided",
             "Keep it friendly and conversational - avoid sounding like an interrogation",
         ],
@@ -606,6 +729,9 @@ def gather_user_information(debug=False):
             "Extract all information from the conversation into a UserProfile",
             "Ensure current_city and desired_city are SPECIFIC city names",
             "If you have income, expenses, preferences, likes, or dislikes - include them",
+            "IMPORTANT: Extract the user's MOST IMPORTANT FACTOR",
+            "The most_important_factor should be ONE clear priority (e.g., 'affordability', 'career growth', 'culture', 'family proximity')",
+            "Look for phrases like 'most important', 'mainly concerned about', 'biggest priority', 'key factor'",
         ],
         output_schema=UserProfile,
         markdown=False,
@@ -613,7 +739,7 @@ def gather_user_information(debug=False):
     
     # Build conversation context
     conversation_history = f"User's initial input: {initial_input}\n\n"
-    max_questions = 8  # Allow more rounds since we're asking one question at a time
+    max_questions = 10  # Allow more rounds to capture most important factor
     question_count = 0
     
     # Stop animation
@@ -625,7 +751,7 @@ def gather_user_information(debug=False):
         """Check if conversation has comprehensive required information"""
         history_lower = history.lower()
         
-        # Check for financial info (both income AND expenses ideally)
+        # Check for financial info
         has_income = any(term in history_lower for term in 
                         ["income", "salary", "earn", "make", "$"])
         has_expenses = any(term in history_lower for term in 
@@ -643,21 +769,22 @@ def gather_user_information(debug=False):
         has_dislikes = any(term in history_lower for term in 
                           ["dislike", "hate", "don't like", "problem with", "issue with", "bad thing"])
         
-        # Must have asked at least 3 rounds since we're asking one at a time
+        # Check for most important factor
+        has_priority = any(term in history_lower for term in 
+                          ["most important", "biggest priority", "key factor", "mainly concerned", 
+                           "priority is", "matters most", "primary concern"])
+        
+        # Must have asked at least 3 rounds
         min_question_rounds = question_count >= 3
         
-        # Require comprehensive coverage:
-        # - At least one financial metric (income OR expenses)
-        # - Preferences about what they value
-        # - At least one of likes/dislikes about current city
-        # - At least 2 rounds of questions asked
-        
+        # Require comprehensive coverage including priority
         has_financial_info = has_income or has_expenses
         has_current_city_opinion = has_likes or has_dislikes
         
         return (has_financial_info and 
                 has_preferences and 
                 has_current_city_opinion and 
+                has_priority and  # NEW: Must have priority
                 min_question_rounds)
     
     while question_count < max_questions:
@@ -679,7 +806,8 @@ def gather_user_information(debug=False):
                 try:
                     profile = profile_extractor.run(
                         conversation_history + "\nExtract the complete UserProfile from this conversation. "
-                        "Ensure current_city and desired_city are specific city names.",
+                        "Ensure current_city and desired_city are specific city names. "
+                        "IMPORTANT: Extract the user's most_important_factor.",
                         stream=False
                     )
                     
@@ -688,18 +816,19 @@ def gather_user_information(debug=False):
                     if debug:
                         print(f"[DEBUG] Extracted profile: {profile.content}")
                     
-                    # Validate the profile has specific cities (not vague)
+                    # Validate the profile has specific cities and priority
                     if (profile.content.current_city and 
                         profile.content.desired_city and
-                        len(profile.content.current_city.split()) <= 4 and  # Not a long explanation
-                        len(profile.content.desired_city.split()) <= 4):  # Not a long explanation
+                        profile.content.most_important_factor and  # NEW: Must have priority
+                        len(profile.content.current_city.split()) <= 4 and
+                        len(profile.content.desired_city.split()) <= 4):
                         
                         if debug:
                             print("[DEBUG] Profile validation passed!")
                         return profile.content
                     else:
                         if debug:
-                            print("[DEBUG] Profile validation failed - cities not specific enough")
+                            print("[DEBUG] Profile validation failed - missing critical info")
                 except Exception as e:
                     profile_animation.stop()
                     if debug:
@@ -714,11 +843,12 @@ def gather_user_information(debug=False):
                 "\nBased on the conversation so far, what is the MOST IMPORTANT piece of missing information? "
                 "Ask ONE question (or ONE topic with closely related sub-parts) to gather it.\n\n"
                 "Priority order:\n"
-                "1. If cities are vague (like 'New York' or 'Florida'), clarify to get SPECIFIC city/borough\n"
-                "2. If no financial info, ask about income AND expenses together (since they're related)\n"
-                "3. If no preferences, ask what they value AND what they like/dislike about current city\n\n"
+                "1. If cities are vague, clarify to get SPECIFIC city/borough\n"
+                "2. If no financial info, ask about income AND expenses together\n"
+                "3. If no preferences, ask what they value AND what they like/dislike about current city\n"
+                "4. If no MOST IMPORTANT FACTOR mentioned, ask what matters MOST to them in this decision\n\n"
                 "IMPORTANT: Ask only ONE question. Don't bundle multiple unrelated topics.\n"
-                "Be natural and conversational, like a friend helping them think through this decision.\n"
+                "Be natural and conversational.\n"
                 "Don't repeat information they've already provided.\n\n"
                 "Just provide the question to ask - nothing else."
             )
@@ -735,7 +865,7 @@ def gather_user_information(debug=False):
             if debug:
                 print(f"[DEBUG] Question response: {question_response.content}")
             
-            # Ask the questions
+            # Ask the question
             print(f"\n{question_response.content}\n")
             user_answer = input("You: ").strip()
             
@@ -750,7 +880,6 @@ def gather_user_information(debug=False):
                 print(f"[DEBUG] User answered, moving to next iteration\n")
             
         except Exception as e:
-            # If there's an error, try one more time to extract what we have
             if debug:
                 print(f"[DEBUG] Exception occurred: {e}")
             print(f"\nLet me work with what we have...\n")
@@ -770,7 +899,8 @@ def gather_user_information(debug=False):
             conversation_history + 
             "\nExtract the UserProfile from all available information. "
             "For current_city and desired_city, use the most specific city names mentioned. "
-            "If only a state was mentioned, note that in the city field but try to get a city name.",
+            "For most_important_factor, identify what the user cares about most. "
+            "If not explicitly stated, infer from context (e.g., if they emphasize budget, use 'affordability').",
             stream=False
         )
         
@@ -792,7 +922,8 @@ def gather_user_information(debug=False):
             monthly_expenses=None,
             city_preferences=["general livability"],
             current_city_likes=["some aspects"],
-            current_city_dislikes=["some aspects"]
+            current_city_dislikes=["some aspects"],
+            most_important_factor="overall quality of life"
         )
 
 
@@ -814,15 +945,18 @@ def main():
     YELLOW = '\033[93m'
     GREEN = '\033[92m'
     BLUE = '\033[94m'
+    MAGENTA = '\033[95m'
     RESET = '\033[0m'
     BOLD = '\033[1m'
     
     print(f"\n{CYAN}{'='*80}{RESET}")
-    print(f"{BOLD}{BLUE}📊 Analyzing Your Move Decision{RESET}")
+    print(f"{BOLD}{BLUE}🎯 Starting Collaborative Debate{RESET}")
     print(f"{CYAN}{'='*80}{RESET}")
     print(f"\n{GREEN}Current City:{RESET} {BOLD}{user_profile.current_city}{RESET}")
     print(f"{YELLOW}Considering:{RESET} {BOLD}{user_profile.desired_city}{RESET}")
-    print(f"\n{BLUE}I'm now consulting with specialized research agents to analyze your move...{RESET}")
+    print(f"{MAGENTA}Your Priority:{RESET} {BOLD}{user_profile.most_important_factor or 'Not specified'}{RESET}")
+    print(f"\n{BLUE}My team of specialists will now DEBATE this move together...{RESET}")
+    print(f"{BLUE}They'll prioritize what matters MOST to you: {BOLD}{user_profile.most_important_factor}{RESET}")
     print(f"\n{CYAN}{'-'*80}{RESET}\n")
     
     # Prepare the context for the team
@@ -831,6 +965,7 @@ def main():
     preferences_str = ', '.join(user_profile.city_preferences) if user_profile.city_preferences else 'Not specified'
     likes_str = ', '.join(user_profile.current_city_likes) if user_profile.current_city_likes else 'Not specified'
     dislikes_str = ', '.join(user_profile.current_city_dislikes) if user_profile.current_city_dislikes else 'Not specified'
+    priority_str = user_profile.most_important_factor or "overall quality of life"
     
     context = f"""
 User Profile:
@@ -841,16 +976,119 @@ User Profile:
 - City Preferences: {preferences_str}
 - Likes About Current City: {likes_str}
 - Dislikes About Current City: {dislikes_str}
+- MOST IMPORTANT FACTOR: {priority_str}
 
-Please analyze whether this user should move from {user_profile.current_city} to {user_profile.desired_city}.
-Coordinate with all three specialist agents and provide a comprehensive recommendation.
+CRITICAL: The user's MOST IMPORTANT FACTOR is "{priority_str}".
+All agents must weight their analysis and recommendations according to this priority.
+Even if an agent's data suggests one direction, they must defer to the user's stated priority.
+
+Please initiate a collaborative debate where all three specialists (Cost Analyst, Sentiment Analyst, 
+Migration Researcher) analyze this move simultaneously and reach consensus.
+
+The debate should:
+1. Consider each specialist's perspective
+2. PRIORITIZE the user's most important factor: "{priority_str}"
+3. Reach consensus on whether the user should move
+4. Document areas of agreement and disagreement
+5. Show how the user's priority influenced the final recommendation
 """
     
-    # Run the team analysis
-    move_decision_team.print_response(input=context, stream=True)
+    # Run the team analysis in cooperation mode with visible agent responses
+    print(f"\n{MAGENTA}{'▼'*80}{RESET}")
+    print(f"{BOLD}{MAGENTA}🗣️  AGENT DEBATE IN PROGRESS{RESET}")
+    print(f"{MAGENTA}{'▼'*80}{RESET}\n")
+    
+    # Manually orchestrate agents to show their contributions
+    print(f"{BLUE}🎭 Team Moderator: Delegating analysis to all specialists...{RESET}\n")
+    
+    # Prepare task for agents
+    agent_task = f"""
+The user is considering moving from {user_profile.current_city} to {user_profile.desired_city}.
+
+Key user profile:
+- Current City: {user_profile.current_city}
+- Desired City: {user_profile.desired_city}
+- Annual Income: {income_str}
+- Monthly Expenses: {expenses_str}
+- Preferences: {preferences_str}
+- Likes about current city: {likes_str}
+- Dislikes: {dislikes_str}
+- MOST IMPORTANT FACTOR: {priority_str} — prioritize and weight every part of your analysis by {priority_str} above all else.
+
+Task: Analyze this move with {priority_str} as the primary lens. Provide your complete structured analysis.
+Remember: The user's MOST IMPORTANT FACTOR is {priority_str}. Weight all advice accordingly.
+"""
+    
+    # Run each agent and display their output
+    agent_results = {}
+    
+    # Cost Analyst
+    print(f"{GREEN}{'─'*80}{RESET}")
+    print(f"{BOLD}💰 COST ANALYST{RESET}")
+    print(f"{GREEN}{'─'*80}{RESET}")
+    cost_result = cost_analyst.run(agent_task, stream=False)
+    if hasattr(cost_result, 'content'):
+        agent_results['cost'] = cost_result.content
+        print(f"\n{CYAN}Key Finding:{RESET} {cost_result.content.overall_cost_difference}")
+        print(f"{CYAN}Housing:{RESET} {cost_result.content.housing_comparison}")
+        print(f"{CYAN}Priority Perspective:{RESET} {cost_result.content.perspective_on_user_priority}\n")
+    
+    # Sentiment Analyst
+    print(f"{GREEN}{'─'*80}{RESET}")
+    print(f"{BOLD}🏙️  SENTIMENT ANALYST{RESET}")
+    print(f"{GREEN}{'─'*80}{RESET}")
+    sentiment_result = sentiment_analyst.run(agent_task, stream=False)
+    if hasattr(sentiment_result, 'content'):
+        agent_results['sentiment'] = sentiment_result.content
+        print(f"\n{CYAN}Overall Sentiment:{RESET} {sentiment_result.content.overall_sentiment}")
+        print(f"{CYAN}Livability:{RESET} {sentiment_result.content.livability_score}")
+        print(f"{CYAN}Priority Perspective:{RESET} {sentiment_result.content.perspective_on_user_priority}\n")
+    
+    # Migration Researcher
+    print(f"{GREEN}{'─'*80}{RESET}")
+    print(f"{BOLD}📊 MIGRATION RESEARCHER{RESET}")
+    print(f"{GREEN}{'─'*80}{RESET}")
+    migration_result = migration_researcher.run(agent_task, stream=False)
+    if hasattr(migration_result, 'content'):
+        agent_results['migration'] = migration_result.content
+        print(f"\n{CYAN}Reddit Sources:{RESET} {migration_result.content.number_of_sources} discussions")
+        print(f"{CYAN}Summary:{RESET} {migration_result.content.summary[:200]}...")
+        print(f"{CYAN}Priority Perspective:{RESET} {migration_result.content.perspective_on_user_priority}\n")
+    
+    # Now have the team synthesize
+    print(f"\n{BLUE}{'═'*80}{RESET}")
+    print(f"{BOLD}{BLUE}🎯 TEAM MODERATOR: Synthesizing Consensus & Creating Report{RESET}")
+    print(f"{BLUE}{'═'*80}{RESET}\n")
+    
+    synthesis_context = f"""
+{context}
+
+AGENT FINDINGS:
+
+Cost Analyst Analysis:
+{agent_results.get('cost', 'Not available')}
+
+Sentiment Analyst Analysis:
+{agent_results.get('sentiment', 'Not available')}
+
+Migration Researcher Analysis:
+{agent_results.get('migration', 'Not available')}
+
+Now synthesize these findings into a final consensus recommendation that:
+1. Reflects the team's collective insights
+2. Prioritizes the user's most important factor: {priority_str}
+3. Includes a debate summary showing agreement/disagreement
+4. Provides actionable next steps
+"""
+    
+    move_decision_team.print_response(input=synthesis_context, stream=True)
+    
+    print(f"\n{MAGENTA}{'▲'*80}{RESET}")
+    print(f"{BOLD}{MAGENTA}🗣️  AGENT DEBATE COMPLETE{RESET}")
+    print(f"{MAGENTA}{'▲'*80}{RESET}\n")
     
     print(f"\n{CYAN}{'='*80}{RESET}")
-    print(f"{BOLD}{GREEN}✅ Analysis complete! Thank you for using Should I Move?{RESET}")
+    print(f"{BOLD}{GREEN}✅ Collaborative analysis complete! Thank you for using Should I Move?{RESET}")
     print(f"{CYAN}{'='*80}{RESET}\n")
 
 

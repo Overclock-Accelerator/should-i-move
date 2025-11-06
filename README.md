@@ -1,6 +1,6 @@
 # Should I Move? 🏙️ → 🌆
 
-AI-powered city relocation decision assistant using coordinated agents to analyze cost of living, city culture, and real migration experiences from Reddit.
+AI-powered city relocation decision assistant using multi-agent systems to analyze cost of living, city culture, and real migration experiences from Reddit.
 
 ## Features
 
@@ -8,10 +8,41 @@ AI-powered city relocation decision assistant using coordinated agents to analyz
 ✅ **City Vibe Analysis** - Analyzes culture, livability, and lifestyle fit  
 ✅ **Reddit Migration Insights** - Searches Reddit for real experiences from people who made similar moves  
 ✅ **Comprehensive Recommendations** - Synthesizes all data into actionable advice  
+✅ **Multiple Analysis Modes** - Choose between coordination or cooperation strategies  
 
 ## Quick Start
 
-### 1. Setup Environment
+### Option 1: AgentOS (Production-Ready Web Interface) 🚀
+
+**Run as a production server with beautiful web UI:**
+
+```bash
+# Linux/Mac
+bash start-agentos.sh
+
+# Windows
+start-agentos.bat
+```
+
+Then visit **https://app.agno.com** and connect to `http://localhost:7777`
+
+**Features:**
+- 🌐 Beautiful web interface for chatting with agents
+- 💾 Session persistence across conversations
+- 🧠 Memory management for personalized interactions
+- 📚 Knowledge base management
+- 📊 Performance monitoring
+- 🔌 REST API for integrations
+
+See [agentos-reference/GETTING_STARTED.md](agentos-reference/GETTING_STARTED.md) for detailed setup instructions.
+
+---
+
+### Option 2: CLI Mode (Interactive Terminal) 💻
+
+**Run directly in your terminal:**
+
+#### 1. Setup Environment
 
 ```bash
 # Create virtual environment (recommended)
@@ -22,7 +53,7 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install agno openai python-dotenv requests
 ```
 
-### 2. Configure API Keys
+#### 2. Configure API Keys
 
 Create a `.env` file in the project root:
 
@@ -38,25 +69,50 @@ BRAVE_API_KEY=BSxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 - Firecrawl: https://firecrawl.dev/
 - Brave Search: https://brave.com/search/api/ (free tier: 2,000 queries/month)
 
-### 3. Run the App
+#### 3. Run the App
 
+**Choose your analysis mode:**
+
+**Coordination Mode (Sequential Analysis)**
 ```bash
-python 02-agno-coordination.py
+python 01-agno-coordination.py
 ```
+Agents work independently, then results are synthesized.
 
-The app will:
+**Cooperation Mode (Collaborative Debate)**
+```bash
+python 03-agno-cooperation.py
+```
+Agents debate together and reach consensus, prioritizing your most important factor.
+
+**Both modes will:**
 1. Ask about your current and desired cities
 2. Gather your financial situation and preferences
-3. Analyze cost of living, city culture, and Reddit discussions
-4. Provide a comprehensive recommendation
+3. Ask what matters MOST to you (cooperation mode)
+4. Analyze cost of living, city culture, and Reddit discussions
+5. Provide a comprehensive recommendation
 
 ## Project Structure
 
 ```
 should-i-move/
-├── 02-agno-coordination.py          # Main application
+├── agentos_integration.py            # 🚀 AgentOS server (production)
+├── start-agentos.sh                  # Quick start script (Linux/Mac)
+├── start-agentos.bat                 # Quick start script (Windows)
+├── requirements-agentos.txt          # AgentOS dependencies
+├── 01-agno-coordination.py           # CLI: Coordination mode
+├── 02-agno-router.py                 # CLI: Router mode
+├── 03-agno-cooperation.py            # CLI: Cooperation mode
 ├── .env                              # API keys (create this)
 ├── README.md                         # This file
+├── agentos-reference/                # 📚 AgentOS documentation
+│   ├── README.md                     # Documentation guide
+│   ├── GETTING_STARTED.md            # Complete setup guide
+│   └── ARCHITECTURE.md               # Technical architecture
+├── 02-agno-coordination-approach/    # Coordination strategy docs
+│   └── README.md
+├── 03-agno-cooperation-approach/     # Cooperation strategy docs
+│   └── README.md
 ├── brave_tools/                      # Reddit search via Brave API
 │   ├── brave_search_tool.py         # Custom search tool
 │   ├── test_brave_integration.py    # Tests
@@ -67,33 +123,82 @@ should-i-move/
 │   ├── city_matcher.py
 │   ├── create_city_database.py
 │   └── validate_cities.py
+├── reports/                          # Generated analysis reports
+│   └── {city}_to_{city}_analysis.md
 └── docs/                             # Documentation
     └── archive/                      # Setup guides & debug files
 ```
 
 ## How It Works
 
+### Two Analysis Modes
+
+#### 🎯 Coordination Mode (`01-agno-coordination.py`)
+**Sequential, Independent Analysis**
+
+- Team leader delegates tasks one-by-one to each specialist
+- Agents work independently with their specialized tools
+- Results are synthesized at the end by the coordinator
+- Best for: Straightforward decisions, when expert opinions don't conflict
+
+```
+Coordinator → Cost Analyst → [waits] → Sentiment Analyst → [waits] → Migration Researcher
+                    ↓                           ↓                              ↓
+                Analysis 1                 Analysis 2                    Analysis 3
+                                              ↓
+                                    Final Synthesis
+```
+
+#### 🤝 Cooperation Mode (`03-agno-cooperation.py`)
+**Collaborative Debate & Consensus**
+
+- All agents receive the task simultaneously
+- Agents discuss findings and debate perspectives
+- Team focuses on user's **most important factor**
+- Agents defer to user priorities even if data suggests otherwise
+- Consensus reached through collaborative discussion
+- Best for: Complex decisions, when priorities matter, when expert opinions might conflict
+
+```
+                        Coordinator
+                             ↓
+        ┌────────────────────┼────────────────────┐
+        ↓                    ↓                    ↓
+   Cost Analyst      Sentiment Analyst    Migration Researcher
+        ↓                    ↓                    ↓
+        └────────────────────┼────────────────────┘
+                             ↓
+                    Collaborative Debate
+                  (focused on user priority)
+                             ↓
+                     Consensus Reached
+```
+
 ### Agent Architecture
 
-The app uses a **Team of Specialized Agents**:
+Both modes use the same **Team of Specialized Agents**:
 
 1. **Cost Analyst** 💰
    - Fetches real cost data from NerdWallet
    - Compares housing, food, transportation, taxes
    - Provides financial impact summary
+   - (Cooperation mode: Adjusts weight based on user priority)
 
 2. **Sentiment Analyst** 🎭
    - Analyzes city vibe and culture
    - Assesses livability based on user preferences
    - Identifies pros and cons
+   - (Cooperation mode: Defers to user's most important factor)
 
 3. **Migration Researcher** 🔍
    - Searches Reddit for real migration stories
    - Extracts common reasons, challenges, outcomes
    - Highlights what Redditors are saying
+   - (Cooperation mode: Filters insights by user priority)
 
 4. **Team Coordinator** 🎯
-   - Synthesizes all agent insights
+   - (Coordination mode: Synthesizes independent analyses)
+   - (Cooperation mode: Moderates debate, ensures consensus)
    - Provides final recommendation
    - Suggests next steps
 
@@ -188,7 +293,12 @@ Custom tools can be added to agents. See `brave-tools/brave_search_tool.py` for 
 
 ## Documentation
 
-Detailed setup guides and troubleshooting docs are in `docs/archive/`:
+### AgentOS Documentation (Production Mode)
+- **[Getting Started Guide](agentos-reference/GETTING_STARTED.md)** - Complete setup, usage, and troubleshooting
+- **[Architecture Reference](agentos-reference/ARCHITECTURE.md)** - System diagrams and technical details
+
+### Legacy Documentation
+Historical setup guides and troubleshooting docs are in `docs/archive/`:
 - Brave Search setup
 - Migration researcher updates
 - venv troubleshooting
