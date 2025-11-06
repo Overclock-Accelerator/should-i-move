@@ -1,0 +1,1278 @@
+{
+  "Akron, OH": {
+    "city": "Akron",
+    "display_name": "Akron, OH",
+    "state": "Ohio",
+    "state_abbr": "OH",
+    "url_format": "akron-oh"
+  },
+  "Albany, NY": {
+    "city": "Albany",
+    "display_name": "Albany, NY",
+    "state": "New York",
+    "state_abbr": "NY",
+    "url_format": "albany-ny"
+  },
+  "Albuquerque, NM": {
+    "city": "Albuquerque",
+    "display_name": "Albuquerque, NM",
+    "state": "New Mexico",
+    "state_abbr": "NM",
+    "url_format": "albuquerque-nm"
+  },
+  "Allentown, PA": {
+    "city": "Allentown",
+    "display_name": "Allentown, PA",
+    "state": "Pennsylvania",
+    "state_abbr": "PA",
+    "url_format": "allentown-pa"
+  },
+  "Amarillo, TX": {
+    "city": "Amarillo",
+    "display_name": "Amarillo, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "amarillo-tx"
+  },
+  "Anaheim, CA": {
+    "city": "Anaheim",
+    "display_name": "Anaheim, CA",
+    "state": "California",
+    "state_abbr": "CA",
+    "url_format": "anaheim-ca"
+  },
+  "Ann Arbor, MI": {
+    "city": "Ann Arbor",
+    "display_name": "Ann Arbor, MI",
+    "state": "Michigan",
+    "state_abbr": "MI",
+    "url_format": "ann-arbor-mi"
+  },
+  "Arlington, TX": {
+    "city": "Arlington",
+    "display_name": "Arlington, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "arlington-tx"
+  },
+  "Arlington, VA": {
+    "city": "Arlington",
+    "display_name": "Arlington, VA",
+    "state": "Virginia",
+    "state_abbr": "VA",
+    "url_format": "arlington-va"
+  },
+  "Atlanta, GA": {
+    "city": "Atlanta",
+    "display_name": "Atlanta, GA",
+    "state": "Georgia",
+    "state_abbr": "GA",
+    "url_format": "atlanta-ga"
+  },
+  "Augusta, GA": {
+    "city": "Augusta",
+    "display_name": "Augusta, GA",
+    "state": "Georgia",
+    "state_abbr": "GA",
+    "url_format": "augusta-ga"
+  },
+  "Aurora, CO": {
+    "city": "Aurora",
+    "display_name": "Aurora, CO",
+    "state": "Colorado",
+    "state_abbr": "CO",
+    "url_format": "aurora-co"
+  },
+  "Aurora, IL": {
+    "city": "Aurora",
+    "display_name": "Aurora, IL",
+    "state": "Illinois",
+    "state_abbr": "IL",
+    "url_format": "aurora-il"
+  },
+  "Austin, TX": {
+    "city": "Austin",
+    "display_name": "Austin, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "austin-tx"
+  },
+  "Bakersfield, CA": {
+    "city": "Bakersfield",
+    "display_name": "Bakersfield, CA",
+    "state": "California",
+    "state_abbr": "CA",
+    "url_format": "bakersfield-ca"
+  },
+  "Baltimore, MD": {
+    "city": "Baltimore",
+    "display_name": "Baltimore, MD",
+    "state": "Maryland",
+    "state_abbr": "MD",
+    "url_format": "baltimore-md"
+  },
+  "Baton Rouge, LA": {
+    "city": "Baton Rouge",
+    "display_name": "Baton Rouge, LA",
+    "state": "Louisiana",
+    "state_abbr": "LA",
+    "url_format": "baton-rouge-la"
+  },
+  "Beaumont, TX": {
+    "city": "Beaumont",
+    "display_name": "Beaumont, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "beaumont-tx"
+  },
+  "Birmingham, AL": {
+    "city": "Birmingham",
+    "display_name": "Birmingham, AL",
+    "state": "Alabama",
+    "state_abbr": "AL",
+    "url_format": "birmingham-al"
+  },
+  "Boise, ID": {
+    "city": "Boise",
+    "display_name": "Boise, ID",
+    "state": "Idaho",
+    "state_abbr": "ID",
+    "url_format": "boise-id"
+  },
+  "Boston, MA": {
+    "city": "Boston",
+    "display_name": "Boston, MA",
+    "state": "Massachusetts",
+    "state_abbr": "MA",
+    "url_format": "boston-ma"
+  },
+  "Boulder, CO": {
+    "city": "Boulder",
+    "display_name": "Boulder, CO",
+    "state": "Colorado",
+    "state_abbr": "CO",
+    "url_format": "boulder-co"
+  },
+  "Bridgeport, CT": {
+    "city": "Bridgeport",
+    "display_name": "Bridgeport, CT",
+    "state": "Connecticut",
+    "state_abbr": "CT",
+    "url_format": "bridgeport-ct"
+  },
+  "Brownsville, TX": {
+    "city": "Brownsville",
+    "display_name": "Brownsville, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "brownsville-tx"
+  },
+  "Buffalo, NY": {
+    "city": "Buffalo",
+    "display_name": "Buffalo, NY",
+    "state": "New York",
+    "state_abbr": "NY",
+    "url_format": "buffalo-ny"
+  },
+  "Cambridge, MA": {
+    "city": "Cambridge",
+    "display_name": "Cambridge, MA",
+    "state": "Massachusetts",
+    "state_abbr": "MA",
+    "url_format": "cambridge-ma"
+  },
+  "Cape Coral, FL": {
+    "city": "Cape Coral",
+    "display_name": "Cape Coral, FL",
+    "state": "Florida",
+    "state_abbr": "FL",
+    "url_format": "cape-coral-fl"
+  },
+  "Cary, NC": {
+    "city": "Cary",
+    "display_name": "Cary, NC",
+    "state": "North Carolina",
+    "state_abbr": "NC",
+    "url_format": "cary-nc"
+  },
+  "Cedar Rapids, IA": {
+    "city": "Cedar Rapids",
+    "display_name": "Cedar Rapids, IA",
+    "state": "Iowa",
+    "state_abbr": "IA",
+    "url_format": "cedar-rapids-ia"
+  },
+  "Chandler, AZ": {
+    "city": "Chandler",
+    "display_name": "Chandler, AZ",
+    "state": "Arizona",
+    "state_abbr": "AZ",
+    "url_format": "chandler-az"
+  },
+  "Charleston, SC": {
+    "city": "Charleston",
+    "display_name": "Charleston, SC",
+    "state": "South Carolina",
+    "state_abbr": "SC",
+    "url_format": "charleston-sc"
+  },
+  "Charlotte, NC": {
+    "city": "Charlotte",
+    "display_name": "Charlotte, NC",
+    "state": "North Carolina",
+    "state_abbr": "NC",
+    "url_format": "charlotte-nc"
+  },
+  "Chattanooga, TN": {
+    "city": "Chattanooga",
+    "display_name": "Chattanooga, TN",
+    "state": "Tennessee",
+    "state_abbr": "TN",
+    "url_format": "chattanooga-tn"
+  },
+  "Chesapeake, VA": {
+    "city": "Chesapeake",
+    "display_name": "Chesapeake, VA",
+    "state": "Virginia",
+    "state_abbr": "VA",
+    "url_format": "chesapeake-va"
+  },
+  "Chicago, IL": {
+    "city": "Chicago",
+    "display_name": "Chicago, IL",
+    "state": "Illinois",
+    "state_abbr": "IL",
+    "url_format": "chicago-il"
+  },
+  "Chula Vista, CA": {
+    "city": "Chula Vista",
+    "display_name": "Chula Vista, CA",
+    "state": "California",
+    "state_abbr": "CA",
+    "url_format": "chula-vista-ca"
+  },
+  "Cincinnati, OH": {
+    "city": "Cincinnati",
+    "display_name": "Cincinnati, OH",
+    "state": "Ohio",
+    "state_abbr": "OH",
+    "url_format": "cincinnati-oh"
+  },
+  "Cleveland, OH": {
+    "city": "Cleveland",
+    "display_name": "Cleveland, OH",
+    "state": "Ohio",
+    "state_abbr": "OH",
+    "url_format": "cleveland-oh"
+  },
+  "Colorado Springs, CO": {
+    "city": "Colorado Springs",
+    "display_name": "Colorado Springs, CO",
+    "state": "Colorado",
+    "state_abbr": "CO",
+    "url_format": "colorado-springs-co"
+  },
+  "Columbia, SC": {
+    "city": "Columbia",
+    "display_name": "Columbia, SC",
+    "state": "South Carolina",
+    "state_abbr": "SC",
+    "url_format": "columbia-sc"
+  },
+  "Columbus, GA": {
+    "city": "Columbus",
+    "display_name": "Columbus, GA",
+    "state": "Georgia",
+    "state_abbr": "GA",
+    "url_format": "columbus-ga"
+  },
+  "Columbus, OH": {
+    "city": "Columbus",
+    "display_name": "Columbus, OH",
+    "state": "Ohio",
+    "state_abbr": "OH",
+    "url_format": "columbus-oh"
+  },
+  "Conroe, TX": {
+    "city": "Conroe",
+    "display_name": "Conroe, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "conroe-tx"
+  },
+  "Corpus Christi, TX": {
+    "city": "Corpus Christi",
+    "display_name": "Corpus Christi, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "corpus-christi-tx"
+  },
+  "Dallas, TX": {
+    "city": "Dallas",
+    "display_name": "Dallas, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "dallas-tx"
+  },
+  "Dayton, OH": {
+    "city": "Dayton",
+    "display_name": "Dayton, OH",
+    "state": "Ohio",
+    "state_abbr": "OH",
+    "url_format": "dayton-oh"
+  },
+  "Denver, CO": {
+    "city": "Denver",
+    "display_name": "Denver, CO",
+    "state": "Colorado",
+    "state_abbr": "CO",
+    "url_format": "denver-co"
+  },
+  "Des Moines, IA": {
+    "city": "Des Moines",
+    "display_name": "Des Moines, IA",
+    "state": "Iowa",
+    "state_abbr": "IA",
+    "url_format": "des-moines-ia"
+  },
+  "Detroit, MI": {
+    "city": "Detroit",
+    "display_name": "Detroit, MI",
+    "state": "Michigan",
+    "state_abbr": "MI",
+    "url_format": "detroit-mi"
+  },
+  "Durham, NC": {
+    "city": "Durham",
+    "display_name": "Durham, NC",
+    "state": "North Carolina",
+    "state_abbr": "NC",
+    "url_format": "durham-nc"
+  },
+  "El Paso, TX": {
+    "city": "El Paso",
+    "display_name": "El Paso, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "el-paso-tx"
+  },
+  "Eugene, OR": {
+    "city": "Eugene",
+    "display_name": "Eugene, OR",
+    "state": "Oregon",
+    "state_abbr": "OR",
+    "url_format": "eugene-or"
+  },
+  "Evansville, IN": {
+    "city": "Evansville",
+    "display_name": "Evansville, IN",
+    "state": "Indiana",
+    "state_abbr": "IN",
+    "url_format": "evansville-in"
+  },
+  "Fayetteville, NC": {
+    "city": "Fayetteville",
+    "display_name": "Fayetteville, NC",
+    "state": "North Carolina",
+    "state_abbr": "NC",
+    "url_format": "fayetteville-nc"
+  },
+  "Fort Collins, CO": {
+    "city": "Fort Collins",
+    "display_name": "Fort Collins, CO",
+    "state": "Colorado",
+    "state_abbr": "CO",
+    "url_format": "fort-collins-co"
+  },
+  "Fort Lauderdale, FL": {
+    "city": "Fort Lauderdale",
+    "display_name": "Fort Lauderdale, FL",
+    "state": "Florida",
+    "state_abbr": "FL",
+    "url_format": "fort-lauderdale-fl"
+  },
+  "Fort Wayne, IN": {
+    "city": "Fort Wayne",
+    "display_name": "Fort Wayne, IN",
+    "state": "Indiana",
+    "state_abbr": "IN",
+    "url_format": "fort-wayne-in"
+  },
+  "Fort Worth, TX": {
+    "city": "Fort Worth",
+    "display_name": "Fort Worth, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "fort-worth-tx"
+  },
+  "Fremont, CA": {
+    "city": "Fremont",
+    "display_name": "Fremont, CA",
+    "state": "California",
+    "state_abbr": "CA",
+    "url_format": "fremont-ca"
+  },
+  "Fresno, CA": {
+    "city": "Fresno",
+    "display_name": "Fresno, CA",
+    "state": "California",
+    "state_abbr": "CA",
+    "url_format": "fresno-ca"
+  },
+  "Frisco, TX": {
+    "city": "Frisco",
+    "display_name": "Frisco, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "frisco-tx"
+  },
+  "Gainesville, FL": {
+    "city": "Gainesville",
+    "display_name": "Gainesville, FL",
+    "state": "Florida",
+    "state_abbr": "FL",
+    "url_format": "gainesville-fl"
+  },
+  "Garland, TX": {
+    "city": "Garland",
+    "display_name": "Garland, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "garland-tx"
+  },
+  "Glendale, AZ": {
+    "city": "Glendale",
+    "display_name": "Glendale, AZ",
+    "state": "Arizona",
+    "state_abbr": "AZ",
+    "url_format": "glendale-az"
+  },
+  "Grand Prairie, TX": {
+    "city": "Grand Prairie",
+    "display_name": "Grand Prairie, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "grand-prairie-tx"
+  },
+  "Grand Rapids, MI": {
+    "city": "Grand Rapids",
+    "display_name": "Grand Rapids, MI",
+    "state": "Michigan",
+    "state_abbr": "MI",
+    "url_format": "grand-rapids-mi"
+  },
+  "Greensboro, NC": {
+    "city": "Greensboro",
+    "display_name": "Greensboro, NC",
+    "state": "North Carolina",
+    "state_abbr": "NC",
+    "url_format": "greensboro-nc"
+  },
+  "Hartford, CT": {
+    "city": "Hartford",
+    "display_name": "Hartford, CT",
+    "state": "Connecticut",
+    "state_abbr": "CT",
+    "url_format": "hartford-ct"
+  },
+  "Henderson, NV": {
+    "city": "Henderson",
+    "display_name": "Henderson, NV",
+    "state": "Nevada",
+    "state_abbr": "NV",
+    "url_format": "henderson-nv"
+  },
+  "Hialeah, FL": {
+    "city": "Hialeah",
+    "display_name": "Hialeah, FL",
+    "state": "Florida",
+    "state_abbr": "FL",
+    "url_format": "hialeah-fl"
+  },
+  "Hollywood, FL": {
+    "city": "Hollywood",
+    "display_name": "Hollywood, FL",
+    "state": "Florida",
+    "state_abbr": "FL",
+    "url_format": "hollywood-fl"
+  },
+  "Houston, TX": {
+    "city": "Houston",
+    "display_name": "Houston, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "houston-tx"
+  },
+  "Indianapolis, IN": {
+    "city": "Indianapolis",
+    "display_name": "Indianapolis, IN",
+    "state": "Indiana",
+    "state_abbr": "IN",
+    "url_format": "indianapolis-in"
+  },
+  "Irvine, CA": {
+    "city": "Irvine",
+    "display_name": "Irvine, CA",
+    "state": "California",
+    "state_abbr": "CA",
+    "url_format": "irvine-ca"
+  },
+  "Irving, TX": {
+    "city": "Irving",
+    "display_name": "Irving, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "irving-tx"
+  },
+  "Jacksonville, FL": {
+    "city": "Jacksonville",
+    "display_name": "Jacksonville, FL",
+    "state": "Florida",
+    "state_abbr": "FL",
+    "url_format": "jacksonville-fl"
+  },
+  "Jersey City, NJ": {
+    "city": "Jersey City",
+    "display_name": "Jersey City, NJ",
+    "state": "New Jersey",
+    "state_abbr": "NJ",
+    "url_format": "jersey-city-nj"
+  },
+  "Joliet, IL": {
+    "city": "Joliet",
+    "display_name": "Joliet, IL",
+    "state": "Illinois",
+    "state_abbr": "IL",
+    "url_format": "joliet-il"
+  },
+  "Kansas City, KS": {
+    "city": "Kansas City",
+    "display_name": "Kansas City, KS",
+    "state": "Kansas",
+    "state_abbr": "KS",
+    "url_format": "kansas-city-ks"
+  },
+  "Kansas City, MO": {
+    "city": "Kansas City",
+    "display_name": "Kansas City, MO",
+    "state": "Missouri",
+    "state_abbr": "MO",
+    "url_format": "kansas-city-mo"
+  },
+  "Killeen, TX": {
+    "city": "Killeen",
+    "display_name": "Killeen, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "killeen-tx"
+  },
+  "Knoxville, TN": {
+    "city": "Knoxville",
+    "display_name": "Knoxville, TN",
+    "state": "Tennessee",
+    "state_abbr": "TN",
+    "url_format": "knoxville-tn"
+  },
+  "Laredo, TX": {
+    "city": "Laredo",
+    "display_name": "Laredo, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "laredo-tx"
+  },
+  "Las Vegas, NV": {
+    "aliases": [
+      "Vegas"
+    ],
+    "city": "Las Vegas",
+    "display_name": "Las Vegas, NV",
+    "state": "Nevada",
+    "state_abbr": "NV",
+    "url_format": "las-vegas-nv"
+  },
+  "Lexington, KY": {
+    "city": "Lexington",
+    "display_name": "Lexington, KY",
+    "state": "Kentucky",
+    "state_abbr": "KY",
+    "url_format": "lexington-ky"
+  },
+  "Lincoln, NE": {
+    "city": "Lincoln",
+    "display_name": "Lincoln, NE",
+    "state": "Nebraska",
+    "state_abbr": "NE",
+    "url_format": "lincoln-ne"
+  },
+  "Little Rock, AR": {
+    "city": "Little Rock",
+    "display_name": "Little Rock, AR",
+    "state": "Arkansas",
+    "state_abbr": "AR",
+    "url_format": "little-rock-ar"
+  },
+  "Long Beach, CA": {
+    "city": "Long Beach",
+    "display_name": "Long Beach, CA",
+    "state": "California",
+    "state_abbr": "CA",
+    "url_format": "long-beach-ca"
+  },
+  "Los Angeles, CA": {
+    "aliases": [
+      "LA"
+    ],
+    "city": "Los Angeles",
+    "display_name": "Los Angeles, CA",
+    "state": "California",
+    "state_abbr": "CA",
+    "url_format": "los-angeles-ca"
+  },
+  "Louisville, KY": {
+    "city": "Louisville",
+    "display_name": "Louisville, KY",
+    "state": "Kentucky",
+    "state_abbr": "KY",
+    "url_format": "louisville-ky"
+  },
+  "Lubbock, TX": {
+    "city": "Lubbock",
+    "display_name": "Lubbock, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "lubbock-tx"
+  },
+  "Macon, GA": {
+    "city": "Macon",
+    "display_name": "Macon, GA",
+    "state": "Georgia",
+    "state_abbr": "GA",
+    "url_format": "macon-ga"
+  },
+  "Madison, WI": {
+    "city": "Madison",
+    "display_name": "Madison, WI",
+    "state": "Wisconsin",
+    "state_abbr": "WI",
+    "url_format": "madison-wi"
+  },
+  "Manchester, NH": {
+    "city": "Manchester",
+    "display_name": "Manchester, NH",
+    "state": "New Hampshire",
+    "state_abbr": "NH",
+    "url_format": "manchester-nh"
+  },
+  "McAllen, TX": {
+    "city": "McAllen",
+    "display_name": "McAllen, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "mcallen-tx"
+  },
+  "McKinney, TX": {
+    "city": "McKinney",
+    "display_name": "McKinney, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "mckinney-tx"
+  },
+  "Memphis, TN": {
+    "city": "Memphis",
+    "display_name": "Memphis, TN",
+    "state": "Tennessee",
+    "state_abbr": "TN",
+    "url_format": "memphis-tn"
+  },
+  "Mesa, AZ": {
+    "city": "Mesa",
+    "display_name": "Mesa, AZ",
+    "state": "Arizona",
+    "state_abbr": "AZ",
+    "url_format": "mesa-az"
+  },
+  "Mesquite, TX": {
+    "city": "Mesquite",
+    "display_name": "Mesquite, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "mesquite-tx"
+  },
+  "Miami, FL": {
+    "city": "Miami",
+    "display_name": "Miami, FL",
+    "state": "Florida",
+    "state_abbr": "FL",
+    "url_format": "miami-fl"
+  },
+  "Milwaukee, WI": {
+    "city": "Milwaukee",
+    "display_name": "Milwaukee, WI",
+    "state": "Wisconsin",
+    "state_abbr": "WI",
+    "url_format": "milwaukee-wi"
+  },
+  "Minneapolis, MN": {
+    "city": "Minneapolis",
+    "display_name": "Minneapolis, MN",
+    "state": "Minnesota",
+    "state_abbr": "MN",
+    "url_format": "minneapolis-mn"
+  },
+  "Mobile, AL": {
+    "city": "Mobile",
+    "display_name": "Mobile, AL",
+    "state": "Alabama",
+    "state_abbr": "AL",
+    "url_format": "mobile-al"
+  },
+  "Modesto, CA": {
+    "city": "Modesto",
+    "display_name": "Modesto, CA",
+    "state": "California",
+    "state_abbr": "CA",
+    "url_format": "modesto-ca"
+  },
+  "Montgomery, AL": {
+    "city": "Montgomery",
+    "display_name": "Montgomery, AL",
+    "state": "Alabama",
+    "state_abbr": "AL",
+    "url_format": "montgomery-al"
+  },
+  "Naperville, IL": {
+    "city": "Naperville",
+    "display_name": "Naperville, IL",
+    "state": "Illinois",
+    "state_abbr": "IL",
+    "url_format": "naperville-il"
+  },
+  "Nashville, TN": {
+    "city": "Nashville",
+    "display_name": "Nashville, TN",
+    "state": "Tennessee",
+    "state_abbr": "TN",
+    "url_format": "nashville-tn"
+  },
+  "New Haven, CT": {
+    "city": "New Haven",
+    "display_name": "New Haven, CT",
+    "state": "Connecticut",
+    "state_abbr": "CT",
+    "url_format": "new-haven-ct"
+  },
+  "New Orleans, LA": {
+    "city": "New Orleans",
+    "display_name": "New Orleans, LA",
+    "state": "Louisiana",
+    "state_abbr": "LA",
+    "url_format": "new-orleans-la"
+  },
+  "New York (Bronx), NY": {
+    "aliases": [
+      "Bronx"
+    ],
+    "city": "New York (Bronx)",
+    "display_name": "New York (Bronx), NY",
+    "state": "New York",
+    "state_abbr": "NY",
+    "url_format": "new-york-bronx-ny"
+  },
+  "New York (Brooklyn), NY": {
+    "aliases": [
+      "Brooklyn"
+    ],
+    "city": "New York (Brooklyn)",
+    "display_name": "New York (Brooklyn), NY",
+    "state": "New York",
+    "state_abbr": "NY",
+    "url_format": "new-york-brooklyn-ny"
+  },
+  "New York (Manhattan), NY": {
+    "aliases": [
+      "NYC",
+      "New York City",
+      "Manhattan"
+    ],
+    "city": "New York (Manhattan)",
+    "display_name": "New York (Manhattan), NY",
+    "state": "New York",
+    "state_abbr": "NY",
+    "url_format": "new-york-manhattan-ny"
+  },
+  "New York (Queens), NY": {
+    "aliases": [
+      "Queens"
+    ],
+    "city": "New York (Queens)",
+    "display_name": "New York (Queens), NY",
+    "state": "New York",
+    "state_abbr": "NY",
+    "url_format": "new-york-queens-ny"
+  },
+  "New York (Staten Island), NY": {
+    "aliases": [
+      "Staten Island"
+    ],
+    "city": "New York (Staten Island)",
+    "display_name": "New York (Staten Island), NY",
+    "state": "New York",
+    "state_abbr": "NY",
+    "url_format": "new-york-staten-island-ny"
+  },
+  "Newark, NJ": {
+    "city": "Newark",
+    "display_name": "Newark, NJ",
+    "state": "New Jersey",
+    "state_abbr": "NJ",
+    "url_format": "newark-nj"
+  },
+  "Newport News, VA": {
+    "city": "Newport News",
+    "display_name": "Newport News, VA",
+    "state": "Virginia",
+    "state_abbr": "VA",
+    "url_format": "newport-news-va"
+  },
+  "Norfolk, VA": {
+    "city": "Norfolk",
+    "display_name": "Norfolk, VA",
+    "state": "Virginia",
+    "state_abbr": "VA",
+    "url_format": "norfolk-va"
+  },
+  "Oakland, CA": {
+    "city": "Oakland",
+    "display_name": "Oakland, CA",
+    "state": "California",
+    "state_abbr": "CA",
+    "url_format": "oakland-ca"
+  },
+  "Oklahoma City, OK": {
+    "city": "Oklahoma City",
+    "display_name": "Oklahoma City, OK",
+    "state": "Oklahoma",
+    "state_abbr": "OK",
+    "url_format": "oklahoma-city-ok"
+  },
+  "Omaha, NE": {
+    "city": "Omaha",
+    "display_name": "Omaha, NE",
+    "state": "Nebraska",
+    "state_abbr": "NE",
+    "url_format": "omaha-ne"
+  },
+  "Orlando, FL": {
+    "city": "Orlando",
+    "display_name": "Orlando, FL",
+    "state": "Florida",
+    "state_abbr": "FL",
+    "url_format": "orlando-fl"
+  },
+  "Overland Park, KS": {
+    "city": "Overland Park",
+    "display_name": "Overland Park, KS",
+    "state": "Kansas",
+    "state_abbr": "KS",
+    "url_format": "overland-park-ks"
+  },
+  "Pasadena, TX": {
+    "city": "Pasadena",
+    "display_name": "Pasadena, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "pasadena-tx"
+  },
+  "Paterson, NJ": {
+    "city": "Paterson",
+    "display_name": "Paterson, NJ",
+    "state": "New Jersey",
+    "state_abbr": "NJ",
+    "url_format": "paterson-nj"
+  },
+  "Pembroke Pines, FL": {
+    "city": "Pembroke Pines",
+    "display_name": "Pembroke Pines, FL",
+    "state": "Florida",
+    "state_abbr": "FL",
+    "url_format": "pembroke-pines-fl"
+  },
+  "Philadelphia, PA": {
+    "aliases": [
+      "Philly"
+    ],
+    "city": "Philadelphia",
+    "display_name": "Philadelphia, PA",
+    "state": "Pennsylvania",
+    "state_abbr": "PA",
+    "url_format": "philadelphia-pa"
+  },
+  "Phoenix, AZ": {
+    "city": "Phoenix",
+    "display_name": "Phoenix, AZ",
+    "state": "Arizona",
+    "state_abbr": "AZ",
+    "url_format": "phoenix-az"
+  },
+  "Pittsburgh, PA": {
+    "city": "Pittsburgh",
+    "display_name": "Pittsburgh, PA",
+    "state": "Pennsylvania",
+    "state_abbr": "PA",
+    "url_format": "pittsburgh-pa"
+  },
+  "Plano, TX": {
+    "city": "Plano",
+    "display_name": "Plano, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "plano-tx"
+  },
+  "Port St Lucie, FL": {
+    "city": "Port St Lucie",
+    "display_name": "Port St Lucie, FL",
+    "state": "Florida",
+    "state_abbr": "FL",
+    "url_format": "port-st-lucie-fl"
+  },
+  "Portland, OR": {
+    "city": "Portland",
+    "display_name": "Portland, OR",
+    "state": "Oregon",
+    "state_abbr": "OR",
+    "url_format": "portland-or"
+  },
+  "Providence, RI": {
+    "city": "Providence",
+    "display_name": "Providence, RI",
+    "state": "Rhode Island",
+    "state_abbr": "RI",
+    "url_format": "providence-ri"
+  },
+  "Provo, UT": {
+    "city": "Provo",
+    "display_name": "Provo, UT",
+    "state": "Utah",
+    "state_abbr": "UT",
+    "url_format": "provo-ut"
+  },
+  "Raleigh, NC": {
+    "city": "Raleigh",
+    "display_name": "Raleigh, NC",
+    "state": "North Carolina",
+    "state_abbr": "NC",
+    "url_format": "raleigh-nc"
+  },
+  "Reno, NV": {
+    "city": "Reno",
+    "display_name": "Reno, NV",
+    "state": "Nevada",
+    "state_abbr": "NV",
+    "url_format": "reno-nv"
+  },
+  "Richmond, VA": {
+    "city": "Richmond",
+    "display_name": "Richmond, VA",
+    "state": "Virginia",
+    "state_abbr": "VA",
+    "url_format": "richmond-va"
+  },
+  "Riverside, CA": {
+    "city": "Riverside",
+    "display_name": "Riverside, CA",
+    "state": "California",
+    "state_abbr": "CA",
+    "url_format": "riverside-ca"
+  },
+  "Rochester, MN": {
+    "city": "Rochester",
+    "display_name": "Rochester, MN",
+    "state": "Minnesota",
+    "state_abbr": "MN",
+    "url_format": "rochester-mn"
+  },
+  "Rochester, NY": {
+    "city": "Rochester",
+    "display_name": "Rochester, NY",
+    "state": "New York",
+    "state_abbr": "NY",
+    "url_format": "rochester-ny"
+  },
+  "Rockford, IL": {
+    "city": "Rockford",
+    "display_name": "Rockford, IL",
+    "state": "Illinois",
+    "state_abbr": "IL",
+    "url_format": "rockford-il"
+  },
+  "Sacramento, CA": {
+    "city": "Sacramento",
+    "display_name": "Sacramento, CA",
+    "state": "California",
+    "state_abbr": "CA",
+    "url_format": "sacramento-ca"
+  },
+  "Salem, OR": {
+    "city": "Salem",
+    "display_name": "Salem, OR",
+    "state": "Oregon",
+    "state_abbr": "OR",
+    "url_format": "salem-or"
+  },
+  "Salt Lake City, UT": {
+    "city": "Salt Lake City",
+    "display_name": "Salt Lake City, UT",
+    "state": "Utah",
+    "state_abbr": "UT",
+    "url_format": "salt-lake-city-ut"
+  },
+  "San Antonio, TX": {
+    "city": "San Antonio",
+    "display_name": "San Antonio, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "san-antonio-tx"
+  },
+  "San Bernardino, CA": {
+    "city": "San Bernardino",
+    "display_name": "San Bernardino, CA",
+    "state": "California",
+    "state_abbr": "CA",
+    "url_format": "san-bernardino-ca"
+  },
+  "San Diego, CA": {
+    "city": "San Diego",
+    "display_name": "San Diego, CA",
+    "state": "California",
+    "state_abbr": "CA",
+    "url_format": "san-diego-ca"
+  },
+  "San Francisco, CA": {
+    "aliases": [
+      "SF",
+      "San Fran"
+    ],
+    "city": "San Francisco",
+    "display_name": "San Francisco, CA",
+    "state": "California",
+    "state_abbr": "CA",
+    "url_format": "san-francisco-ca"
+  },
+  "San Jose, CA": {
+    "city": "San Jose",
+    "display_name": "San Jose, CA",
+    "state": "California",
+    "state_abbr": "CA",
+    "url_format": "san-jose-ca"
+  },
+  "Santa Ana, CA": {
+    "city": "Santa Ana",
+    "display_name": "Santa Ana, CA",
+    "state": "California",
+    "state_abbr": "CA",
+    "url_format": "santa-ana-ca"
+  },
+  "Savannah, GA": {
+    "city": "Savannah",
+    "display_name": "Savannah, GA",
+    "state": "Georgia",
+    "state_abbr": "GA",
+    "url_format": "savannah-ga"
+  },
+  "Scottsdale, AZ": {
+    "city": "Scottsdale",
+    "display_name": "Scottsdale, AZ",
+    "state": "Arizona",
+    "state_abbr": "AZ",
+    "url_format": "scottsdale-az"
+  },
+  "Seattle, WA": {
+    "city": "Seattle",
+    "display_name": "Seattle, WA",
+    "state": "Washington",
+    "state_abbr": "WA",
+    "url_format": "seattle-wa"
+  },
+  "Shreveport, LA": {
+    "city": "Shreveport",
+    "display_name": "Shreveport, LA",
+    "state": "Louisiana",
+    "state_abbr": "LA",
+    "url_format": "shreveport-la"
+  },
+  "Spokane, WA": {
+    "city": "Spokane",
+    "display_name": "Spokane, WA",
+    "state": "Washington",
+    "state_abbr": "WA",
+    "url_format": "spokane-wa"
+  },
+  "Springfield, IL": {
+    "city": "Springfield",
+    "display_name": "Springfield, IL",
+    "state": "Illinois",
+    "state_abbr": "IL",
+    "url_format": "springfield-il"
+  },
+  "Springfield, MA": {
+    "city": "Springfield",
+    "display_name": "Springfield, MA",
+    "state": "Massachusetts",
+    "state_abbr": "MA",
+    "url_format": "springfield-ma"
+  },
+  "Springfield, MO": {
+    "city": "Springfield",
+    "display_name": "Springfield, MO",
+    "state": "Missouri",
+    "state_abbr": "MO",
+    "url_format": "springfield-mo"
+  },
+  "St Louis, MO": {
+    "city": "St Louis",
+    "display_name": "St Louis, MO",
+    "state": "Missouri",
+    "state_abbr": "MO",
+    "url_format": "st-louis-mo"
+  },
+  "St Paul, MN": {
+    "city": "St Paul",
+    "display_name": "St Paul, MN",
+    "state": "Minnesota",
+    "state_abbr": "MN",
+    "url_format": "st-paul-mn"
+  },
+  "St Petersburg, FL": {
+    "city": "St Petersburg",
+    "display_name": "St Petersburg, FL",
+    "state": "Florida",
+    "state_abbr": "FL",
+    "url_format": "st-petersburg-fl"
+  },
+  "Sterling Heights, MI": {
+    "city": "Sterling Heights",
+    "display_name": "Sterling Heights, MI",
+    "state": "Michigan",
+    "state_abbr": "MI",
+    "url_format": "sterling-heights-mi"
+  },
+  "Stockton, CA": {
+    "city": "Stockton",
+    "display_name": "Stockton, CA",
+    "state": "California",
+    "state_abbr": "CA",
+    "url_format": "stockton-ca"
+  },
+  "Syracuse, NY": {
+    "city": "Syracuse",
+    "display_name": "Syracuse, NY",
+    "state": "New York",
+    "state_abbr": "NY",
+    "url_format": "syracuse-ny"
+  },
+  "Tacoma, WA": {
+    "city": "Tacoma",
+    "display_name": "Tacoma, WA",
+    "state": "Washington",
+    "state_abbr": "WA",
+    "url_format": "tacoma-wa"
+  },
+  "Tallahassee, FL": {
+    "city": "Tallahassee",
+    "display_name": "Tallahassee, FL",
+    "state": "Florida",
+    "state_abbr": "FL",
+    "url_format": "tallahassee-fl"
+  },
+  "Tampa, FL": {
+    "city": "Tampa",
+    "display_name": "Tampa, FL",
+    "state": "Florida",
+    "state_abbr": "FL",
+    "url_format": "tampa-fl"
+  },
+  "Toledo, OH": {
+    "city": "Toledo",
+    "display_name": "Toledo, OH",
+    "state": "Ohio",
+    "state_abbr": "OH",
+    "url_format": "toledo-oh"
+  },
+  "Tucson, AZ": {
+    "city": "Tucson",
+    "display_name": "Tucson, AZ",
+    "state": "Arizona",
+    "state_abbr": "AZ",
+    "url_format": "tucson-az"
+  },
+  "Tulsa, OK": {
+    "city": "Tulsa",
+    "display_name": "Tulsa, OK",
+    "state": "Oklahoma",
+    "state_abbr": "OK",
+    "url_format": "tulsa-ok"
+  },
+  "Vancouver, WA": {
+    "city": "Vancouver",
+    "display_name": "Vancouver, WA",
+    "state": "Washington",
+    "state_abbr": "WA",
+    "url_format": "vancouver-wa"
+  },
+  "Virginia Beach, VA": {
+    "city": "Virginia Beach",
+    "display_name": "Virginia Beach, VA",
+    "state": "Virginia",
+    "state_abbr": "VA",
+    "url_format": "virginia-beach-va"
+  },
+  "Waco, TX": {
+    "city": "Waco",
+    "display_name": "Waco, TX",
+    "state": "Texas",
+    "state_abbr": "TX",
+    "url_format": "waco-tx"
+  },
+  "Warren, MI": {
+    "city": "Warren",
+    "display_name": "Warren, MI",
+    "state": "Michigan",
+    "state_abbr": "MI",
+    "url_format": "warren-mi"
+  },
+  "West Valley City, UT": {
+    "city": "West Valley City",
+    "display_name": "West Valley City, UT",
+    "state": "Utah",
+    "state_abbr": "UT",
+    "url_format": "west-valley-city-ut"
+  },
+  "Wichita, KS": {
+    "city": "Wichita",
+    "display_name": "Wichita, KS",
+    "state": "Kansas",
+    "state_abbr": "KS",
+    "url_format": "wichita-ks"
+  },
+  "Winston-Salem, NC": {
+    "city": "Winston-Salem",
+    "display_name": "Winston-Salem, NC",
+    "state": "North Carolina",
+    "state_abbr": "NC",
+    "url_format": "winston-salem-nc"
+  },
+  "Worcester, MA": {
+    "city": "Worcester",
+    "display_name": "Worcester, MA",
+    "state": "Massachusetts",
+    "state_abbr": "MA",
+    "url_format": "worcester-ma"
+  },
+  "Yonkers, NY": {
+    "city": "Yonkers",
+    "display_name": "Yonkers, NY",
+    "state": "New York",
+    "state_abbr": "NY",
+    "url_format": "yonkers-ny"
+  }
+}
