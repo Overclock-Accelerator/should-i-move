@@ -1633,28 +1633,160 @@ Now let me add code at the start of the script to suppress Agno's debug logging:
 
 ---
 
-<tool-use data-tool-type="unknown" data-tool-name="search_replace">
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **code_edit** • Edit file: 03-agno-cooperation.py</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: undefined
+
+```diff
+@@ -5,4 +5,5 @@
+  import time
+  import threading
++ import logging
+  from datetime import datetime
+  from dotenv import load_dotenv
+```
+
+**Chunk 2**
+Lines added: 3, lines removed: undefined
+
+```diff
+@@ -21,4 +22,7 @@
+  # Load environment variables from .env file
+  load_dotenv()
++ 
++ # Suppress Agno debug logging (only show warnings and above)
++ logging.getLogger(&quot;agno&quot;).setLevel(logging.WARNING)
+  
+  # Load city database for URL formatting
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Good. Now let me also suppress the phi (OpenAI) debug logging which is what's showing all those "DEBUG" lines about model responses, tool calls, etc.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **code_edit** • Edit file: 03-agno-cooperation.py</summary>
+
+**Chunk 1**
+Lines added: 2, lines removed: 1
+
+```diff
+@@ -23,6 +23,7 @@
+  load_dotenv()
+  
+- # Suppress Agno debug logging (only show warnings and above)
++ # Suppress Agno and phi debug logging (only show warnings and above)
+  logging.getLogger(&quot;agno&quot;).setLevel(logging.WARNING)
++ logging.getLogger(&quot;phi&quot;).setLevel(logging.WARNING)
+  
+  # Load city database for URL formatting
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Perfect. Now let me also check if there are any other loggers that might be producing debug output. The DEBUG lines seemed to include OpenAI API details, so let me also suppress openai logging if present.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **code_edit** • Edit file: 03-agno-cooperation.py</summary>
+
+**Chunk 1**
+Lines added: 4, lines removed: 1
+
+```diff
+@@ -23,7 +23,10 @@
+  load_dotenv()
+  
+- # Suppress Agno and phi debug logging (only show warnings and above)
++ # Suppress debug logging from Agno framework and related libraries
++ # This prevents verbose DEBUG output during synthesis
+  logging.getLogger(&quot;agno&quot;).setLevel(logging.WARNING)
+  logging.getLogger(&quot;phi&quot;).setLevel(logging.WARNING)
++ logging.getLogger(&quot;openai&quot;).setLevel(logging.WARNING)
++ logging.getLogger(&quot;httpx&quot;).setLevel(logging.WARNING)  # Suppress HTTP request logs
+  
+  # Load city database for URL formatting
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Let me also create a cleaner visual separator before the Team synthesis since we're now manually orchestrating the agents. This will make it clear that we've moved from individual agent outputs to the final synthesis.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **code_edit** • Edit file: 03-agno-cooperation.py</summary>
+
+**Chunk 1**
+Lines added: 3, lines removed: 3
+
+```diff
+@@ -1057,7 +1057,7 @@
+      
+      # Now have the team synthesize
+-     print(f&quot;\n{BLUE}{&#39;─&#39;*80}{RESET}&quot;)
+-     print(f&quot;{BOLD}🎯 TEAM MODERATOR: Synthesizing Consensus{RESET}&quot;)
+-     print(f&quot;{BLUE}{&#39;─&#39;*80}{RESET}\n&quot;)
++     print(f&quot;\n{BLUE}{&#39;═&#39;*80}{RESET}&quot;)
++     print(f&quot;{BOLD}{BLUE}🎯 TEAM MODERATOR: Synthesizing Consensus &amp; Creating Report{RESET}&quot;)
++     print(f&quot;{BLUE}{&#39;═&#39;*80}{RESET}\n&quot;)
+      
+      synthesis_context = f&quot;&quot;&quot;
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Great. Now let me run lints to check if everything is good.</details></think>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
 <details>
-<summary>Tool use: **search_replace**</summary>
+          <summary>Tool use: **read_lints** • Read lints for 1 file</summary>
+      
+Lint paths:
+
+- `03-agno-cooperation.py`
+
+Lint results
+
+Lint errors for `03-agno-cooperation.py`
 
 
-Parameters:
-
-```json
-{
-  &quot;relativeWorkspacePath&quot;: &quot;03-agno-cooperation.py&quot;
-}
-```
-Additional data:
-
-```json
-{
-  &quot;codeblockId&quot;: &quot;1889266d-27cf-4179-8b3d-299d46f7efda&quot;
-}
-```
-User decision: **accepted**
-
-Status: **loading**
+| Message | Range | Severity |
+|-------|-------|----------|
+| Import "os" is not accessed | 2:8-2:10 | DIAGNOSTIC_SEVERITY_HINT |
+| Import "datetime" is not accessed | 8:22-8:30 | DIAGNOSTIC_SEVERITY_HINT |
+| Variable "BLUE" is not accessed | 654:5-654:9 | DIAGNOSTIC_SEVERITY_HINT |
 
 
 </details>
@@ -1662,7 +1794,68 @@ Status: **loading**
 
 ---
 
+<think><details><summary>Thought Process</summary>
+Perfect! Let me create a summary of what I changed to fix the debug output issue.</details></think>
 
+---
+
+Perfect! I've suppressed the debug output from the Team synthesis phase.
+
+## Changes Made
+
+### 1. **Removed Debug Mode**
+```python
+# Before:
+debug_mode=True,  # Enable debug output
+
+# After:
+# (removed)
+```
+
+### 2. **Added Logging Suppression**
+Added comprehensive logging configuration at the top of the script to suppress verbose debug output:
+
+```python
+# Suppress debug logging from Agno framework and related libraries
+# This prevents verbose DEBUG output during synthesis
+logging.getLogger("agno").setLevel(logging.WARNING)
+logging.getLogger("phi").setLevel(logging.WARNING)
+logging.getLogger("openai").setLevel(logging.WARNING)
+logging.getLogger("httpx").setLevel(logging.WARNING)  # Suppress HTTP request logs
+```
+
+### 3. **Cleaner Visual Separator**
+Changed the synthesis header to use a more prominent visual style:
+
+```
+════════════════════════════════════════════════════════════════════════════════
+🎯 TEAM MODERATOR: Synthesizing Consensus & Creating Report
+════════════════════════════════════════════════════════════════════════════════
+```
+
+## What You'll See Now
+
+**Before:**
+```
+────────────────────────────────────────────────────────────────
+🎯 TEAM MODERATOR: Synthesizing Consensus
+────────────────────────────────────────────────────────────────
+DEBUG ****************************** Team ID: city-move-decision-team ******************************
+DEBUG ********************** Session ID: 9ba5e059-065a-4681-8e26-b72756009f88 **********************
+DEBUG Creating new TeamSession: 9ba5e059-065a-4681-8e26-b72756009f88
+[... many more DEBUG lines ...]
+```
+
+**After:**
+```
+════════════════════════════════════════════════════════════════
+🎯 TEAM MODERATOR: Synthesizing Consensus & Creating Report
+════════════════════════════════════════════════════════════════
+
+[Clean consensus output with no debug lines]
+```
+
+The three individual agent POVs will still show clearly (as they do now), and the final synthesis will be clean without the verbose DEBUG output.
 
 ---
 

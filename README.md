@@ -12,33 +12,7 @@ AI-powered city relocation decision assistant using multi-agent systems to analy
 
 ## Quick Start
 
-### Option 1: AgentOS (Production-Ready Web Interface) 🚀
-
-**Run as a production server with beautiful web UI:**
-
-```bash
-# Linux/Mac
-bash start-agentos.sh
-
-# Windows
-start-agentos.bat
-```
-
-Then visit **https://app.agno.com** and connect to `http://localhost:7777`
-
-**Features:**
-- 🌐 Beautiful web interface for chatting with agents
-- 💾 Session persistence across conversations
-- 🧠 Memory management for personalized interactions
-- 📚 Knowledge base management
-- 📊 Performance monitoring
-- 🔌 REST API for integrations
-
-See [agentos-reference/GETTING_STARTED.md](agentos-reference/GETTING_STARTED.md) for detailed setup instructions.
-
----
-
-### Option 2: CLI Mode (Interactive Terminal) 💻
+### Option 1: CLI Mode (Interactive Terminal) 💻
 
 **Run directly in your terminal:**
 
@@ -47,7 +21,7 @@ See [agentos-reference/GETTING_STARTED.md](agentos-reference/GETTING_STARTED.md)
 ```bash
 # Create virtual environment (recommended)
 python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+source .venv/bin/activate  # On Windows: source .venv/Scripts/activate
 
 # Install dependencies
 pip install agno openai python-dotenv requests
@@ -91,6 +65,32 @@ Agents debate together and reach consensus, prioritizing your most important fac
 3. Ask what matters MOST to you (cooperation mode)
 4. Analyze cost of living, city culture, and Reddit discussions
 5. Provide a comprehensive recommendation
+
+---
+
+### Option 2: AgentOS (Production-Ready Web Interface) 🚀
+
+**Run as a production server with beautiful web UI:**
+
+```bash
+# Linux/Mac
+bash start-agentos.sh
+
+# Windows
+start-agentos.bat
+```
+
+Then visit **https://app.agno.com** and connect to `http://localhost:7777`
+
+**Features:**
+- 🌐 Beautiful web interface for chatting with agents
+- 💾 Session persistence across conversations
+- 🧠 Memory management for personalized interactions
+- 📚 Knowledge base management
+- 📊 Performance monitoring
+- 🔌 REST API for integrations
+
+See [agentos-reference/GETTING_STARTED.md](agentos-reference/GETTING_STARTED.md) for detailed setup instructions.
 
 ## Project Structure
 

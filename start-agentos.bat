@@ -71,15 +71,20 @@ if errorlevel 1 (
 echo.
 
 REM Check if virtual environment exists
-if not exist venv (
+if exist .venv (
+    set VENV_DIR=.venv
+) else if exist venv (
+    set VENV_DIR=venv
+) else (
     echo 📦 Creating virtual environment...
-    python -m venv venv
+    python -m venv .venv
+    set VENV_DIR=.venv
     echo ✅ Virtual environment created
 )
 
 REM Activate virtual environment
 echo 🔧 Activating virtual environment...
-call venv\Scripts\activate.bat
+call !VENV_DIR!\Scripts\activate.bat
 
 REM Install dependencies
 echo 📥 Installing dependencies...

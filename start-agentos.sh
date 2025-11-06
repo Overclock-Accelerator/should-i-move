@@ -81,15 +81,20 @@ fi
 echo ""
 
 # Check if virtual environment exists
-if [ ! -d "venv" ]; then
+if [ -d ".venv" ]; then
+    VENV_DIR=".venv"
+elif [ -d "venv" ]; then
+    VENV_DIR="venv"
+else
     echo -e "${BLUE}📦 Creating virtual environment...${NC}"
-    python -m venv venv
+    python -m venv .venv
+    VENV_DIR=".venv"
     echo -e "${GREEN}✅ Virtual environment created${NC}"
 fi
 
 # Activate virtual environment
 echo -e "${BLUE}🔧 Activating virtual environment...${NC}"
-source venv/bin/activate || source venv/Scripts/activate 2>/dev/null
+source "$VENV_DIR/bin/activate" 2>/dev/null || source "$VENV_DIR/Scripts/activate" 2>/dev/null
 
 # Install dependencies
 echo -e "${BLUE}📥 Installing dependencies...${NC}"
