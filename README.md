@@ -10,6 +10,21 @@ AI-powered city relocation decision assistant using multi-agent systems to analy
 ✅ **Comprehensive Recommendations** - Synthesizes all data into actionable advice  
 ✅ **Multiple Analysis Modes** - Choose between coordination or cooperation strategies  
 
+## Requirements
+
+### For CLI Mode
+- Python 3.11+
+- Virtual environment (recommended)
+- Dependencies: `pip install -r requirements.txt`
+- API Keys: OpenAI, Firecrawl, Brave Search (see Configuration section)
+
+### For AgentOS Mode
+- Python 3.11+
+- Virtual environment (recommended)
+- Dependencies: `pip install -r requirements-agentos.txt`
+- PostgreSQL with pgvector (Docker recommended)
+- API Keys: OpenAI, Firecrawl, Brave Search (see Configuration section)
+
 ## Quick Start
 
 ### Option 1: CLI Mode (Interactive Terminal) 💻
@@ -24,7 +39,7 @@ python -m venv .venv
 source .venv/bin/activate  # On Windows: source .venv/Scripts/activate
 
 # Install dependencies
-pip install agno openai python-dotenv requests
+pip install -r requirements.txt
 ```
 
 #### 2. Configure API Keys
@@ -72,6 +87,39 @@ Agents debate together and reach consensus, prioritizing your most important fac
 
 **Run as a production server with beautiful web UI:**
 
+#### 1. Setup Environment
+
+```bash
+# Create virtual environment (if not already created)
+python -m venv .venv
+source .venv/bin/activate  # On Windows: source .venv/Scripts/activate
+
+# Install AgentOS dependencies
+pip install -r requirements-agentos.txt
+```
+
+#### 2. Configure Database
+
+AgentOS requires PostgreSQL with pgvector. The start script will set this up automatically, or you can configure manually:
+
+```bash
+# Using Docker (recommended - handled by start script)
+docker run -d \
+  --name agentos-postgres \
+  -e POSTGRES_USER=agno \
+  -e POSTGRES_PASSWORD=agno \
+  -e POSTGRES_DB=agno \
+  -p 5532:5432 \
+  pgvector/pgvector:pg16
+```
+
+Update `.env` with database URL:
+```bash
+AGENTOS_DB_URL=postgresql+psycopg://agno:agno@localhost:5532/agno
+```
+
+#### 3. Run AgentOS
+
 ```bash
 # Linux/Mac
 bash start-agentos.sh
@@ -96,9 +144,10 @@ See [agentos-reference/GETTING_STARTED.md](agentos-reference/GETTING_STARTED.md)
 
 ```
 should-i-move/
-├── agentos_integration.py            # 🚀 AgentOS server (production)
+├── 04-agno-agentos.py                # 🚀 AgentOS server (production)
 ├── start-agentos.sh                  # Quick start script (Linux/Mac)
 ├── start-agentos.bat                 # Quick start script (Windows)
+├── requirements.txt                  # CLI mode dependencies
 ├── requirements-agentos.txt          # AgentOS dependencies
 ├── 01-agno-coordination.py           # CLI: Coordination mode
 ├── 02-agno-router.py                 # CLI: Router mode

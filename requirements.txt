@@ -1,0 +1,17 @@
+# CLI Mode Requirements
+# Install with: pip install -r requirements.txt
+
+# Core Agno framework
+agno>=0.1.0
+
+# AI/ML
+openai>=1.54.0
+pydantic>=2.10.0
+
+# Web scraping and search
+firecrawl-py>=1.5.0
+requests>=2.32.0
+
+# Utilities
+python-dotenv>=1.0.0
+
