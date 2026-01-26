@@ -20,6 +20,7 @@ migration_researcher = Agent(
         "Analyze the returned Reddit discussions to extract insights",
         "SPECIFICALLY call out what Redditors are saying in the 'redditor_perspectives' field",
         "Include direct themes, common sentiments, or representative perspectives from the discussions",
+        "EXTRACT specific quotes and their source URLs into the 'featured_quotes' field. Each entry must have a 'quote' (the text snippet) and 'url' (the source link).",
         "Identify common reasons people gave for moving from the Reddit results",
         "Highlight common challenges mentioned in the discussions",
         "Report common positive outcomes from the Reddit threads",

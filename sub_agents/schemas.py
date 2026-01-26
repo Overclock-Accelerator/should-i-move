@@ -49,6 +49,12 @@ class SentimentAnalysis(BaseModel):
     notable_cons: List[str] = Field(..., description="Notable negative aspects")
 
 
+class Quote(BaseModel):
+    """A specific quote with its source"""
+    quote: str = Field(..., description="The text of the quote")
+    url: str = Field(..., description="The source URL of the quote")
+
+
 class MigrationInsights(BaseModel):
     """Insights from people who made similar moves"""
     number_of_sources: int = Field(..., description="Number of migration stories analyzed")
@@ -57,6 +63,10 @@ class MigrationInsights(BaseModel):
     )
     redditor_perspectives: str = Field(
         ..., description="Summary of what Redditors are saying about this move, including key quotes or themes"
+    )
+    featured_quotes: List[Quote] = Field(
+        ...,
+        description="List of specific quotes with their source URLs."
     )
     common_reasons_for_moving: List[str] = Field(
         ..., description="Common reasons people gave for the move"
@@ -87,11 +97,18 @@ class FinalRecommendation(BaseModel):
     key_concerns: List[str] = Field(
         ..., description="Key concerns or potential risks"
     )
-    financial_impact_summary: str = Field(
-        ..., description="Summary of expected financial impact"
+    cost_analysis_report: str = Field(
+        ..., description="Detailed report of the Cost Analyst's findings, including specific percentage differences and category breakdowns. Do not simplify - provide the data."
     )
-    lifestyle_impact_summary: str = Field(
-        ..., description="Summary of expected lifestyle impact"
+    sentiment_analysis_report: str = Field(
+        ..., description="Detailed report of the Sentiment Analyst's findings, including vibe, culture, and livability factors. Do not simplify."
+    )
+    migration_analysis_report: str = Field(
+        ..., description="Detailed report of the Migration Researcher's findings, summarizing experiences, challenges, and outcomes. Do not simplify."
+    )
+    featured_migration_quotes: List[Quote] = Field(
+        ...,
+        description="Selected quotes from migration research with URLs."
     )
     next_steps: List[str] = Field(
         ..., description="Suggested next steps for the user"

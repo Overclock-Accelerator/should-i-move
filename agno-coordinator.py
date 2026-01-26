@@ -106,6 +106,7 @@ move_decision_team = Team(
         "After receiving all three analyses, synthesize the information into a clear recommendation.",
         "Provide a balanced assessment considering financial, lifestyle, and experiential factors.",
         "Be honest about uncertainties and suggest next steps for further research.",
+        "Ensure you populate the 'featured_migration_quotes' field in the final output using the data from the Migration Researcher.",
     ],
     output_schema=FinalRecommendation,
     add_member_tools_to_context=False,
@@ -417,11 +418,14 @@ def save_report(user_profile: UserProfile, recommendation: FinalRecommendation):
 **Recommendation:** {recommendation.recommendation}  
 **Confidence Level:** {recommendation.confidence_level}
 
-## Financial Impact Summary
-{recommendation.financial_impact_summary}
+## Cost Analysis Report
+{recommendation.cost_analysis_report}
 
-## Lifestyle Impact Summary
-{recommendation.lifestyle_impact_summary}
+## Sentiment & Lifestyle Analysis Report
+{recommendation.sentiment_analysis_report}
+
+## Migration Research Report
+{recommendation.migration_analysis_report}
 
 ## Key Supporting Factors
 """
@@ -433,6 +437,16 @@ def save_report(user_profile: UserProfile, recommendation: FinalRecommendation):
         content += f"- {concern}\n"
         
     content += f"\n## Detailed Justification\n{recommendation.detailed_justification}\n"
+    
+    if hasattr(recommendation, 'featured_migration_quotes') and recommendation.featured_migration_quotes:
+        content += "\n## Featured Migration Quotes\n"
+        for item in recommendation.featured_migration_quotes:
+            quote = item.quote
+            url = item.url
+            if quote:
+                content += f"> \"{quote}\"\n"
+                if url:
+                    content += f"> — [Source]({url})\n\n"
     
     content += "\n## Next Steps\n"
     for step in recommendation.next_steps:
@@ -483,12 +497,24 @@ def print_formatted_recommendation(recommendation: FinalRecommendation):
     print_section("KEY SUPPORTING FACTORS", recommendation.key_supporting_factors, GREEN)
     print_section("KEY CONCERNS", recommendation.key_concerns, RED)
     
-    print_section("FINANCIAL IMPACT SUMMARY", recommendation.financial_impact_summary, YELLOW)
-    print_section("LIFESTYLE IMPACT SUMMARY", recommendation.lifestyle_impact_summary, CYAN)
+    print_section("COST ANALYSIS REPORT", recommendation.cost_analysis_report, YELLOW)
+    print_section("SENTIMENT & LIFESTYLE REPORT", recommendation.sentiment_analysis_report, CYAN)
+    print_section("MIGRATION RESEARCH REPORT", recommendation.migration_analysis_report, BLUE)
     
     print_section("NEXT STEPS", recommendation.next_steps, BLUE)
     
     print_section("DETAILED JUSTIFICATION", recommendation.detailed_justification, MAGENTA)
+    
+    if hasattr(recommendation, 'featured_migration_quotes') and recommendation.featured_migration_quotes:
+        print(f"\n{BLUE}{BOLD}FEATURED MIGRATION QUOTES{RESET}")
+        for item in recommendation.featured_migration_quotes:
+            quote = item.quote
+            url = item.url
+            if quote:
+                print(textwrap.fill(f"\"{quote}\"", width=width, initial_indent="  ", subsequent_indent="  "))
+                if url:
+                    print(f"  — {url}")
+                print()
     
     print(f"\n{CYAN}{'='*width}{RESET}\n")
 

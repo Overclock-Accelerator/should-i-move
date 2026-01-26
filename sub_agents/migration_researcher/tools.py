@@ -1,4 +1,5 @@
 import os
+import time
 import requests
 from typing import List, Optional
 from pydantic import BaseModel, Field
@@ -98,6 +99,9 @@ def search_reddit_discussions(
             print(f"   ⚠️  Request timed out")
         except Exception as e:
             print(f"   ⚠️  Error: {e}")
+        
+        # Respect rate limits (1 request per second for free tier)
+        time.sleep(1.1)
     
     print(f"\n✅ [REDDIT SEARCH] Collected {len(all_results)} unique Reddit discussions\n")
     
@@ -133,10 +137,11 @@ Found {len(all_results)} Reddit discussions
 INSTRUCTIONS FOR ANALYSIS:
 Based on these {len(all_results)} Reddit discussions, extract:
 1. What Redditors are saying about this move (for 'redditor_perspectives' field)
-2. Common reasons people gave for moving
-3. Common challenges mentioned
-4. Common positive outcomes reported
-5. Any warnings or regrets shared
+2. Specific quotes and their source URLs (for 'featured_quotes' field) - use the 'Preview' text as the quote if relevant
+3. Common reasons people gave for moving
+4. Common challenges mentioned
+5. Common positive outcomes reported
+6. Any warnings or regrets shared
 
 Set 'reddit_insights_included' to True since we found Reddit data.
 Set 'number_of_sources' to {len(all_results)}.
