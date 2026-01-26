@@ -483,7 +483,15 @@ To https://github.com/Overclock-Accelerator/should-i-move.git
 
 ---
 
+I've resolved the issue. The `.env` file containing the secret was accidentally committed in a previous step.
 
+Here is what I did to fix it:
+1.  **Reset the branch** to match the remote state (`origin/main`) while keeping all your file changes staged.
+2.  **Removed `.env` from git tracking** (it remains on your local disk, but git will now ignore it).
+3.  **Squashed the pending commits** into a single clean commit.
+4.  **Pushed successfully** to GitHub.
+
+Your repository is now up to date, and the secret is not in the history of the new commit.
 
 ---
 
