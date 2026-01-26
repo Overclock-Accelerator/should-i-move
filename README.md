@@ -8,30 +8,17 @@ AI-powered city relocation decision assistant using multi-agent systems to analy
 ✅ **City Vibe Analysis** - Analyzes culture, livability, and lifestyle fit  
 ✅ **Reddit Migration Insights** - Searches Reddit for real experiences from people who made similar moves  
 ✅ **Comprehensive Recommendations** - Synthesizes all data into actionable advice  
-✅ **Multiple Analysis Modes** - Choose between coordination or cooperation strategies  
 
 ## Requirements
 
-### For CLI Mode
 - Python 3.11+
 - Virtual environment (recommended)
 - Dependencies: `pip install -r requirements.txt`
 - API Keys: OpenAI, Firecrawl, Brave Search (see Configuration section)
 
-### For AgentOS Mode
-- Python 3.11+
-- Virtual environment (recommended)
-- Dependencies: `pip install -r requirements-agentos.txt`
-- PostgreSQL with pgvector (Docker recommended)
-- API Keys: OpenAI, Firecrawl, Brave Search (see Configuration section)
-
 ## Quick Start
 
-### Option 1: CLI Mode (Interactive Terminal) 💻
-
-**Run directly in your terminal:**
-
-#### 1. Setup Environment
+### 1. Setup Environment
 
 ```bash
 # Create virtual environment (recommended)
@@ -42,7 +29,7 @@ source .venv/bin/activate  # On Windows: source .venv/Scripts/activate
 pip install -r requirements.txt
 ```
 
-#### 2. Configure API Keys
+### 2. Configure API Keys
 
 Create a `.env` file in the project root:
 
@@ -58,131 +45,48 @@ BRAVE_API_KEY=BSxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 - Firecrawl: https://firecrawl.dev/
 - Brave Search: https://brave.com/search/api/ (free tier: 2,000 queries/month)
 
-#### 3. Run the App
+### 3. Run the App
 
-**Choose your analysis mode:**
-
-**Coordination Mode (Sequential Analysis)**
 ```bash
-python 01-agno-coordination.py
+python agno-coordinator.py
 ```
-Agents work independently, then results are synthesized.
 
-**Cooperation Mode (Collaborative Debate)**
-```bash
-python 03-agno-cooperation.py
-```
-Agents debate together and reach consensus, prioritizing your most important factor.
-
-**Both modes will:**
+**The app will:**
 1. Ask about your current and desired cities
 2. Gather your financial situation and preferences
-3. Ask what matters MOST to you (cooperation mode)
-4. Analyze cost of living, city culture, and Reddit discussions
-5. Provide a comprehensive recommendation
-
----
-
-### Option 2: AgentOS (Production-Ready Web Interface) 🚀
-
-**Run as a production server with beautiful web UI:**
-
-#### 1. Setup Environment
-
-```bash
-# Create virtual environment (if not already created)
-python -m venv .venv
-source .venv/bin/activate  # On Windows: source .venv/Scripts/activate
-
-# Install AgentOS dependencies
-pip install -r requirements-agentos.txt
-```
-
-#### 2. Configure Database
-
-AgentOS requires PostgreSQL with pgvector. The start script will set this up automatically, or you can configure manually:
-
-```bash
-# Using Docker (recommended - handled by start script)
-docker run -d \
-  --name agentos-postgres \
-  -e POSTGRES_USER=agno \
-  -e POSTGRES_PASSWORD=agno \
-  -e POSTGRES_DB=agno \
-  -p 5532:5432 \
-  pgvector/pgvector:pg16
-```
-
-Update `.env` with database URL:
-```bash
-AGENTOS_DB_URL=postgresql+psycopg://agno:agno@localhost:5532/agno
-```
-
-#### 3. Run AgentOS
-
-```bash
-# Linux/Mac
-bash start-agentos.sh
-
-# Windows
-start-agentos.bat
-```
-
-Then visit **https://app.agno.com** and connect to `http://localhost:7777`
-
-**Features:**
-- 🌐 Beautiful web interface for chatting with agents
-- 💾 Session persistence across conversations
-- 🧠 Memory management for personalized interactions
-- 📚 Knowledge base management
-- 📊 Performance monitoring
-- 🔌 REST API for integrations
-
-See [agentos-reference/GETTING_STARTED.md](agentos-reference/GETTING_STARTED.md) for detailed setup instructions.
+3. Analyze cost of living, city culture, and Reddit discussions
+4. Provide a comprehensive recommendation
 
 ## Project Structure
 
 ```
 should-i-move/
-├── 04-agno-agentos.py                # 🚀 AgentOS server (production)
-├── start-agentos.sh                  # Quick start script (Linux/Mac)
-├── start-agentos.bat                 # Quick start script (Windows)
-├── requirements.txt                  # CLI mode dependencies
-├── requirements-agentos.txt          # AgentOS dependencies
-├── 01-agno-coordination.py           # CLI: Coordination mode
-├── 02-agno-router.py                 # CLI: Router mode
-├── 03-agno-cooperation.py            # CLI: Cooperation mode
+├── agno-coordinator.py               # Main Application
+├── sub_agents/                       # Specialized Agents
+│   ├── cost_analyst/                 # Cost of living analysis
+│   │   ├── agent.py
+│   │   └── tools.py
+│   ├── sentiment_analyst/            # City vibe analysis
+│   │   └── agent.py
+│   ├── migration_researcher/         # Reddit migration stories
+│   │   ├── agent.py
+│   │   └── tools.py
+│   └── models.py                     # Shared data models
 ├── .env                              # API keys (create this)
+├── requirements.txt                  # Dependencies
 ├── README.md                         # This file
-├── agentos-reference/                # 📚 AgentOS documentation
-│   ├── README.md                     # Documentation guide
-│   ├── GETTING_STARTED.md            # Complete setup guide
-│   └── ARCHITECTURE.md               # Technical architecture
-├── 02-agno-coordination-approach/    # Coordination strategy docs
-│   └── README.md
-├── 03-agno-cooperation-approach/     # Cooperation strategy docs
-│   └── README.md
-├── brave_tools/                      # Reddit search via Brave API
-│   ├── brave_search_tool.py         # Custom search tool
-│   ├── test_brave_integration.py    # Tests
-│   └── README.md                     # Tool documentation
 ├── data/                             # NerdWallet city database
+│   ├── nerd-wallet-data-generator/   # Scripts to generate city data
+│   │   ├── create_city_database.py
+│   │   └── ...
 │   └── nerdwallet_cities_comprehensive.json
-├── nerdwallet-tools/                 # Cost of living utilities
-│   ├── city_matcher.py
-│   ├── create_city_database.py
-│   └── validate_cities.py
-├── reports/                          # Generated analysis reports
-│   └── {city}_to_{city}_analysis.md
-└── docs/                             # Documentation
-    └── archive/                      # Setup guides & debug files
+└── reports/                          # Generated analysis reports
+    └── README.md
 ```
 
 ## How It Works
 
-### Two Analysis Modes
-
-#### 🎯 Coordination Mode (`01-agno-coordination.py`)
+### Coordination Mode (`agno-coordinator.py`)
 **Sequential, Independent Analysis**
 
 - Team leader delegates tasks one-by-one to each specialist
@@ -198,56 +102,27 @@ Coordinator → Cost Analyst → [waits] → Sentiment Analyst → [waits] → M
                                     Final Synthesis
 ```
 
-#### 🤝 Cooperation Mode (`03-agno-cooperation.py`)
-**Collaborative Debate & Consensus**
-
-- All agents receive the task simultaneously
-- Agents discuss findings and debate perspectives
-- Team focuses on user's **most important factor**
-- Agents defer to user priorities even if data suggests otherwise
-- Consensus reached through collaborative discussion
-- Best for: Complex decisions, when priorities matter, when expert opinions might conflict
-
-```
-                        Coordinator
-                             ↓
-        ┌────────────────────┼────────────────────┐
-        ↓                    ↓                    ↓
-   Cost Analyst      Sentiment Analyst    Migration Researcher
-        ↓                    ↓                    ↓
-        └────────────────────┼────────────────────┘
-                             ↓
-                    Collaborative Debate
-                  (focused on user priority)
-                             ↓
-                     Consensus Reached
-```
-
 ### Agent Architecture
 
-Both modes use the same **Team of Specialized Agents**:
+The system uses a **Team of Specialized Agents**:
 
 1. **Cost Analyst** 💰
    - Fetches real cost data from NerdWallet
    - Compares housing, food, transportation, taxes
    - Provides financial impact summary
-   - (Cooperation mode: Adjusts weight based on user priority)
 
 2. **Sentiment Analyst** 🎭
    - Analyzes city vibe and culture
    - Assesses livability based on user preferences
    - Identifies pros and cons
-   - (Cooperation mode: Defers to user's most important factor)
 
 3. **Migration Researcher** 🔍
    - Searches Reddit for real migration stories
    - Extracts common reasons, challenges, outcomes
    - Highlights what Redditors are saying
-   - (Cooperation mode: Filters insights by user priority)
 
 4. **Team Coordinator** 🎯
-   - (Coordination mode: Synthesizes independent analyses)
-   - (Cooperation mode: Moderates debate, ensures consensus)
+   - Synthesizes independent analyses
    - Provides final recommendation
    - Suggests next steps
 
@@ -270,15 +145,10 @@ This approach:
 ## Testing
 
 ### Test Brave Search Integration
+You can test the migration researcher's tool directly:
 ```bash
-python brave_tools/test_brave_integration.py
-```
-
-Expected output:
-```
-🎉 All tests passed! Custom Brave Search integration is working!
-✅ No dependency issues!
-✅ Works in your .venv environment!
+# Create a test script or run in python shell
+python -c "from sub_agents.migration_researcher.tools import search_reddit_discussions; print(search_reddit_discussions('Seattle', 'New York'))"
 ```
 
 ## Example Output
@@ -319,7 +189,7 @@ Expected output:
 - Restart terminal/IDE
 
 ### "City not found in database"
-- Run: `python nerdwallet-tools/validate_cities.py`
+- Run: `python data/nerd-wallet-data-generator/validate_cities.py`
 - Check city name spelling
 - Try "City, State" format (e.g., "Seattle, WA")
 
@@ -334,34 +204,12 @@ Expected output:
 The app includes a comprehensive database of ~200 US cities with NerdWallet URL formats. To update:
 
 ```bash
-python nerdwallet-tools/create_city_database.py
+python data/nerd-wallet-data-generator/create_city_database.py
 ```
 
 ### Adding New Tools
-Custom tools can be added to agents. See `brave-tools/brave_search_tool.py` for an example.
-
-## Documentation
-
-### AgentOS Documentation (Production Mode)
-- **[Getting Started Guide](agentos-reference/GETTING_STARTED.md)** - Complete setup, usage, and troubleshooting
-- **[Architecture Reference](agentos-reference/ARCHITECTURE.md)** - System diagrams and technical details
-
-### Legacy Documentation
-Historical setup guides and troubleshooting docs are in `docs/archive/`:
-- Brave Search setup
-- Migration researcher updates
-- venv troubleshooting
-- Alternative approaches attempted
+Custom tools can be added to agents in their respective `tools.py` files.
 
 ## License
 
 MIT
-
-## Contributing
-
-Feel free to submit issues or PRs for:
-- Additional data sources
-- New analysis agents
-- City database improvements
-- UI enhancements
-

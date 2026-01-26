@@ -1,8 +1,3 @@
-"""
-Custom Brave Search tool that works without brave-search package dependencies.
-Uses the Brave Search API directly via simple HTTP requests.
-"""
-
 import os
 import requests
 from typing import List, Optional
@@ -148,16 +143,3 @@ Set 'number_of_sources' to {len(all_results)}.
 """
     
     return formatted_results
-
-
-# Test function
-if __name__ == "__main__":
-    from dotenv import load_dotenv
-    load_dotenv()
-    
-    print("Testing Brave Search Tool")
-    print("="*80)
-    
-    result = search_reddit_discussions("Seattle", "New York")
-    print(result)
-
