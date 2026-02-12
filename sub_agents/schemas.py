@@ -83,6 +83,28 @@ class MigrationInsights(BaseModel):
     summary: str = Field(..., description="Overall summary of migration experiences")
 
 
+class WikipediaAnalysis(BaseModel):
+    """Wikipedia data analysis comparing cities on specific criteria"""
+    criteria_analyzed: str = Field(
+        ..., description="The criteria that was analyzed (e.g., 'diversity', 'weather', 'crime')"
+    )
+    current_city_data: str = Field(
+        ..., description="Numeric data and statistics found for the current city with specific values"
+    )
+    desired_city_data: str = Field(
+        ..., description="Numeric data and statistics found for the desired city with specific values"
+    )
+    comparison_summary: str = Field(
+        ..., description="Summary comparing the numeric data between both cities"
+    )
+    key_differences: List[str] = Field(
+        ..., description="Key numeric differences between the cities on this criteria"
+    )
+    data_quality_note: str = Field(
+        ..., description="Note about the quality and completeness of the data found"
+    )
+
+
 class FinalRecommendation(BaseModel):
     """Final recommendation with justification"""
     recommendation: str = Field(

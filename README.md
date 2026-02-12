@@ -18,7 +18,9 @@ AI-powered city relocation decision assistant using multi-agent systems to analy
 
 ## Quick Start
 
-### 1. Setup Environment
+### CLI Mode (Interactive)
+
+#### 1. Setup Environment
 
 ```bash
 # Create virtual environment (recommended)
@@ -29,7 +31,7 @@ source .venv/bin/activate  # On Windows: source .venv/Scripts/activate
 pip install -r requirements.txt
 ```
 
-### 2. Configure API Keys
+#### 2. Configure API Keys
 
 Create a `.env` file in the project root:
 
@@ -45,10 +47,10 @@ BRAVE_API_KEY=BSxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 - Firecrawl: https://firecrawl.dev/
 - Brave Search: https://brave.com/search/api/ (free tier: 2,000 queries/month)
 
-### 3. Run the App
+#### 3. Run the App
 
 ```bash
-python agno-coordinator.py
+python agno_coordinator.py
 ```
 
 **The app will:**
@@ -57,11 +59,62 @@ python agno-coordinator.py
 3. Analyze cost of living, city culture, and Reddit discussions
 4. Provide a comprehensive recommendation
 
+### API Mode (FastAPI Server)
+
+For integration with web apps or other services, run the FastAPI server:
+
+#### 1. Start the Server
+
+```bash
+python api.py
+```
+
+Or using uvicorn:
+```bash
+uvicorn api:app --reload --port 8000
+```
+
+#### 2. Test the API
+
+Visit http://localhost:8000/docs for interactive API documentation.
+
+Submit an analysis request:
+```bash
+curl -X POST "http://localhost:8000/analyze" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "current_city": "New York City",
+    "desired_city": "Austin",
+    "annual_income": 85000,
+    "monthly_expenses": 3500,
+    "city_preferences": ["good weather", "tech industry"],
+    "current_city_likes": ["public transit"],
+    "current_city_dislikes": ["high cost"]
+  }'
+```
+
+Check analysis status:
+```bash
+curl "http://localhost:8000/analysis/{analysis_id}"
+```
+
+#### 3. Deploy to Railway
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions.
+
+**Quick deploy:**
+1. Push code to GitHub
+2. Connect Railway to your repository
+3. Add environment variables in Railway dashboard
+4. Deploy automatically
+
 ## Project Structure
 
 ```
 should-i-move/
-├── agno-coordinator.py               # Main Application
+├── agno_coordinator.py               # Main CLI Application
+├── api.py                            # FastAPI Server
+├── test_api.py                       # API Test Script
 ├── sub_agents/                       # Specialized Agents
 │   ├── cost_analyst/                 # Cost of living analysis
 │   │   ├── agent.py
@@ -71,10 +124,14 @@ should-i-move/
 │   ├── migration_researcher/         # Reddit migration stories
 │   │   ├── agent.py
 │   │   └── tools.py
-│   └── models.py                     # Shared data models
+│   └── schemas.py                    # Shared data models
 ├── .env                              # API keys (create this)
+├── .env.example                      # Environment template
 ├── requirements.txt                  # Dependencies
+├── railway.toml                      # Railway deployment config
 ├── README.md                         # This file
+├── API_GUIDE.md                      # API usage guide
+├── DEPLOYMENT.md                     # Deployment instructions
 ├── data/                             # NerdWallet city database
 │   ├── nerd-wallet-data-generator/   # Scripts to generate city data
 │   │   ├── create_city_database.py
@@ -86,7 +143,7 @@ should-i-move/
 
 ## How It Works
 
-### Coordination Mode (`agno-coordinator.py`)
+### Coordination Mode (`agno_coordinator.py`)
 **Sequential, Independent Analysis**
 
 - Team leader delegates tasks one-by-one to each specialist

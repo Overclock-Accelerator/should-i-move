@@ -1,4 +1,4 @@
-# CLI Mode Requirements
+# Should I Move? Requirements
 # Install with: pip install -r requirements.txt
 
 # Core Agno framework
@@ -11,6 +11,10 @@ pydantic>=2.10.0
 # Web scraping and search
 firecrawl-py>=1.5.0
 requests>=2.32.0
+
+# FastAPI and server
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
 
 # Utilities
 python-dotenv>=1.0.0
