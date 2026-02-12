@@ -5,10 +5,12 @@ Provides REST API endpoints to trigger move analysis.
 
 from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel, Field
 from typing import Optional, Dict
 import uvicorn
 import os
+import glob
 from datetime import datetime
 from dotenv import load_dotenv
 
@@ -115,7 +117,8 @@ async def root():
         "version": "1.0.0",
         "endpoints": {
             "POST /analyze": "Submit a move analysis request",
-            "GET /analysis/{analysis_id}": "Check analysis status and get results"
+            "GET /analysis/{analysis_id}": "Check analysis status and get results",
+            "GET /report/{analysis_id}": "Retrieve the markdown report for a completed analysis"
         }
     }
 
@@ -225,6 +228,72 @@ async def delete_analysis(analysis_id: str):
         "message": f"Analysis '{analysis_id}' deleted successfully",
         "deleted_at": datetime.now().isoformat()
     }
+
+
+@app.get("/report/{analysis_id}", response_class=PlainTextResponse)
+async def get_report_markdown(analysis_id: str):
+    """
+    Retrieve the markdown report for a completed analysis.
+    
+    Args:
+        analysis_id: The analysis ID (e.g., analysis_20260212_001510_934692)
+    
+    Returns:
+        The full markdown report as plain text
+    
+    Example:
+        GET /report/analysis_20260212_001510_934692
+    """
+    # Extract timestamp from analysis_id (format: analysis_YYYYMMDD_HHMMSS_microseconds)
+    # We need YYYYMMDD_HHMMSS part for matching the report filename
+    if not analysis_id.startswith("analysis_"):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid analysis_id format. Expected format: analysis_YYYYMMDD_HHMMSS_microseconds"
+        )
+    
+    # Extract timestamp portion (without microseconds)
+    # analysis_20260212_001510_934692 -> 20260212_001510
+    timestamp_parts = analysis_id.replace("analysis_", "").split("_")
+    if len(timestamp_parts) < 2:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid analysis_id format"
+        )
+    
+    timestamp = f"{timestamp_parts[0]}_{timestamp_parts[1]}"  # YYYYMMDD_HHMMSS
+    
+    # Search for report file matching the timestamp
+    reports_dir = "reports"
+    if not os.path.exists(reports_dir):
+        raise HTTPException(
+            status_code=404,
+            detail="Reports directory not found. No reports have been generated yet."
+        )
+    
+    # Find files matching the timestamp pattern
+    pattern = os.path.join(reports_dir, f"*_{timestamp}_analysis.md")
+    matching_files = glob.glob(pattern)
+    
+    if not matching_files:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Report not found for analysis_id: {analysis_id}. The analysis may still be processing or may have failed."
+        )
+    
+    # If multiple matches (unlikely), use the first one
+    report_file = matching_files[0]
+    
+    # Read and return the markdown content
+    try:
+        with open(report_file, 'r', encoding='utf-8') as f:
+            content = f.read()
+        return content
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error reading report file: {str(e)}"
+        )
 
 
 if __name__ == "__main__":
